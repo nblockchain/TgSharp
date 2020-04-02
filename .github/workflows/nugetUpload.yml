@@ -26,5 +26,5 @@ jobs:
         $date = get-date -format "yyyyMMdd-HHmm"
         $hash = & git rev-parse --short HEAD
         
-        nuget pack src/TgSharp.Core/TgSharp.Core.nuspec -Version "0.0.1-date.$date.git.$hash"
-        nuget push "TgSharp.0.0.1-date.$date.git.$hash.nupkg" {{secrets.NUGET_API_KEY}} -Source https://api.nuget.org/v3/index.json
+        Nuget.exe pack src/TgSharp.Core/TgSharp.Core.nuspec -Version "0.0.1-date.$date.git.$hash"
+        Nuget.exe push "TgSharp.0.0.1-date.$date.git.$hash.nupkg" {{secrets.NUGET_API_KEY}} -Source https://api.nuget.org/v3/index.json
