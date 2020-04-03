@@ -39,13 +39,6 @@ or build from source
 1. Compile source with VS2015 or MonoDevelop
 1. Add reference to ```TgSharp.Core.dll``` to your awesome project.
 
-
-# Dependencies
-
-TgSharp has a few dependenices, most of functionality implemented from scratch.
-All dependencies listed in [package.conf file](https://github.com/nblockchain/TgSharp/blob/master/src/TgSharp.Core/packages.config).
-
-
 # Starter Guide
 
 ## Quick Configuration
