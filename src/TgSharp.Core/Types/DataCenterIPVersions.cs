@@ -1,10 +1,10 @@
-﻿namespace TgSharp.Core
+﻿namespace TLSharp.Core.Types
 {
     /// <summary>
     /// When the Telegram server responds with a set of addresses to connect to, DataCenterIPVersion indicates a preference 
     /// for how to choose the IP address to connect to 
     /// </summary>
-    public enum DataCenterIPVersion
+    public enum DataCenterIPVersions
     {
         /// <summary>
         /// Picks the first available address passed by Telegram
@@ -27,4 +27,6 @@
         /// </summary>
         PreferIPv6,
     }
+
+
 }

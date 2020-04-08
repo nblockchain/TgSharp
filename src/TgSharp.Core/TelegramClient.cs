@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TeleSharp.TL;
 using TeleSharp.TL.Account;
 using TeleSharp.TL.Auth;
+using TeleSharp.TL.Channels;
 using TeleSharp.TL.Contacts;
 using TeleSharp.TL.Help;
 using TeleSharp.TL.Messages;
@@ -18,12 +19,18 @@ using TgSharp.Core.MTProto.Crypto;
 using TgSharp.Core.Network;
 using TgSharp.Core.Network.Exceptions;
 using TgSharp.Core.Utils;
+using TLSharp.Core.Types;
 using TLAuthorization = TeleSharp.TL.Auth.TLAuthorization;
 
 namespace TgSharp.Core
 {
     public class TelegramClient : IDisposable
     {
+        /// <summary>
+        /// When pagination is needed, this is the default page size
+        /// </summary> 
+        public const int DEFAULT_PAGE_SIZE = 200;
+
         private MtProtoSender sender;
         private TcpTransport transport;
         private string apiHash = String.Empty;
@@ -31,7 +38,7 @@ namespace TgSharp.Core
         private Session session;
         private List<TLDcOption> dcOptions;
         private TcpClientConnectionHandler handler;
-        private DataCenterIPVersion dcIpVersion;
+        private DataCenterIPVersions dcIpVersion;
 
         public Session Session
         {
@@ -49,7 +56,7 @@ namespace TgSharp.Core
         /// <param name="dcIpVersion">Indicates the preferred IpAddress version to use to connect to a Telegram server</param>
         public TelegramClient(int apiId, string apiHash,
             ISessionStore store = null, string sessionUserId = "session", TcpClientConnectionHandler handler = null,
-            DataCenterIPVersion dcIpVersion = DataCenterIPVersion.Default)
+            DataCenterIPVersions dcIpVersion = DataCenterIPVersions.Default)
         {
             if (apiId == default(int))
                 throw new MissingApiConfigurationException("API_ID");
@@ -114,20 +121,20 @@ namespace TgSharp.Core
             }
 
             IEnumerable<TLDcOption> dcs;
-            if (dcIpVersion == DataCenterIPVersion.OnlyIPv6)
+            if (dcIpVersion == DataCenterIPVersions.OnlyIPv6)
                 dcs = dcOptions.Where(d => d.Id == dcId && d.Ipv6); // selects only ipv6 addresses 	
-            else if (dcIpVersion == DataCenterIPVersion.OnlyIPv4)
+            else if (dcIpVersion == DataCenterIPVersions.OnlyIPv4)
                 dcs = dcOptions.Where(d => d.Id == dcId && !d.Ipv6); // selects only ipv4 addresses
             else
                 dcs = dcOptions.Where(d => d.Id == dcId); // any
 
             TLDcOption dc;
-            if (dcIpVersion != DataCenterIPVersion.Default)
+            if (dcIpVersion != DataCenterIPVersions.Default)
             {
                 if (!dcs.Any())
                     throw new Exception($"Telegram server didn't provide us with any IPAddress that matches your preferences. If you chose OnlyIPvX, try switch to PreferIPvX instead.");
                 dcs = dcs.OrderBy(d => d.Ipv6);
-                dc = dcIpVersion == DataCenterIPVersion.PreferIPv4 ? dcs.First() : dcs.Last(); // ipv4 addresses are at the beginning of the list because it was ordered
+                dc = dcIpVersion == DataCenterIPVersions.PreferIPv4 ? dcs.First() : dcs.Last(); // ipv4 addresses are at the beginning of the list because it was ordered
             }
             else
                 dc = dcs.First();
@@ -284,7 +291,7 @@ namespace TgSharp.Core
 
         public async Task<TLUser> UpdateUsernameAsync(string username, CancellationToken token = default(CancellationToken))
         {
-            var req = new TLRequestUpdateUsername { Username = username };
+            var req = new TeleSharp.TL.Account.TLRequestUpdateUsername { Username = username };
 
             return await SendAuthenticatedRequestAsync<TLUser>(req, token)
                 .ConfigureAwait(false);
@@ -292,7 +299,7 @@ namespace TgSharp.Core
 
         public async Task<bool> CheckUsernameAsync(string username, CancellationToken token = default(CancellationToken))
         {
-            var req = new TLRequestCheckUsername { Username = username };
+            var req = new TeleSharp.TL.Account.TLRequestCheckUsername { Username = username };
 
             return await SendAuthenticatedRequestAsync<bool>(req, token)
                 .ConfigureAwait(false);
@@ -454,6 +461,306 @@ namespace TgSharp.Core
                 .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Authenticates a Bot 
+        /// </summary>
+        /// <param name="botAuthToken">The token of the bot to authenticate</param>
+        /// <param name="token"></param>
+        /// <returns>The TLUser descriptor</returns>
+        public async Task<TLUser> MakeAuthBotAsync(string botAuthToken, CancellationToken token = default(CancellationToken))
+        {
+            if (String.IsNullOrWhiteSpace(botAuthToken))
+            {
+                throw new ArgumentNullException(nameof(botAuthToken));
+            }
+
+            var request = new TLRequestImportBotAuthorization() { BotAuthToken = botAuthToken, ApiId = apiId, ApiHash = apiHash };
+
+            await RequestWithDcMigration(request, token).ConfigureAwait(false);
+
+            OnUserAuthenticated(((TLUser)((TLAuthorization)request.Response).User));
+            return ((TLUser)((TLAuthorization)request.Response).User);
+        }
+
+        /// <summary>
+        /// Gets the full information of a specified chat
+        /// </summary>
+        /// <param name="chatId">The ID of the chat we want the info of</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TeleSharp.TL.Messages.TLChatFull> GetFullChat(int chatId, CancellationToken token = default(CancellationToken))
+        {
+            var req = new TLRequestGetFullChat() { ChatId = chatId };
+            var fchat = await SendRequestAsync<TeleSharp.TL.Messages.TLChatFull>(req, token).ConfigureAwait(false);
+
+            return fchat;
+        }
+
+        /// <summary>
+        /// Gets the list of chats and channels opened by the authenticated user. 
+        /// Throws an exception if the authenticated user is a bot.
+        /// </summary> 
+        /// <param name="token"></param>
+        /// <returns>The list of chats opened by the authenticated user</returns>
+        public async Task<TLChats> GetAllChats(CancellationToken token = default(CancellationToken))
+        {
+            return await GetAllChats(null, token);
+        }
+
+        /// <summary>
+        /// Gets the list of chats and channels opened by the authenticated user except the passed ones. 
+        /// Throws an exception if the authenticated user is a bot.
+        /// </summary> 
+        /// <param name="ids">The IDs of the chats to be returned</param>
+        /// <param name="token"></param>
+        /// <returns>The list of chats opened by the authenticated user</returns>
+        public async Task<TLChats> GetAllChats(int[] exceptdIds, CancellationToken token = default(CancellationToken))
+        {
+            var ichats = new TeleSharp.TL.TLVector<int>(); // we can't pass a null argument to the TLRequestGetChats
+            if (exceptdIds != null)
+                foreach (var id in exceptdIds)
+                    ichats.Add(id);
+            var chats = await SendRequestAsync<TLChats>(new TLRequestGetAllChats() { ExceptIds = ichats }, token).ConfigureAwait(false);
+            return chats as TLChats;
+        }
+
+        /// <summary>
+        /// Gets the information about a channel
+        /// </summary>
+        /// <param name="channel">The channel to get the info of</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TeleSharp.TL.Messages.TLChatFull> GetFullChannel(TLChannel channel, CancellationToken token = default(CancellationToken))
+        {
+            if (channel == null) return null;
+            return await GetFullChannel(channel.Id, (long)channel.AccessHash, token).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets the information about a channel
+        /// </summary>
+        /// <param name="channelId">The ID of the channel</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TeleSharp.TL.Messages.TLChatFull> GetFullChannel(int channelId, long accessHash, CancellationToken token = default(CancellationToken))
+        {
+            var req = new TLRequestGetFullChannel() { Channel = new TLInputChannel() { ChannelId = channelId, AccessHash = accessHash } };
+            var fchat = await SendRequestAsync<TeleSharp.TL.Messages.TLChatFull>(req, token).ConfigureAwait(false);
+
+            return fchat;
+        }
+
+        /// <summary>
+        /// Gets the channels having the supplied IDs
+        /// </summary>
+        /// <param name="channelIds">The IDs of the channels to be retrieved</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TeleSharp.TL.Messages.TLChats> GetChannels(int[] channelIds, CancellationToken token = default(CancellationToken))
+        {
+            var channels = new TLVector<TeleSharp.TL.TLAbsInputChannel>(); // we can't pass a null argument to the TLRequestGetChats
+            if (channelIds != null)
+                foreach (var channelId in channelIds)
+                    channels.Add(new TLInputChannel() { ChannelId = channelId });
+            var req = new TLRequestGetChannels() { Id = channels };
+            var fchat = await SendRequestAsync<TeleSharp.TL.Messages.TLChats>(req, token).ConfigureAwait(false);
+
+            return fchat;
+        }
+
+        /// <summary>
+        /// Gets the participants of the channel having the supplied type.
+        /// The method will auto-paginate results and return all the participants
+        /// </summary>
+        /// <param name="channel">The TLChannel whose participants are requested</param>
+        /// <param name="stIdx">The index to start fetching from. -1 will automatically fetch all the results</param>
+        /// <param name="pageSize">How many results to be fetch on each iteration. 
+        /// Values smaller than 0 are ignored. If stIdx is set, a number of results smaller than pageSize might be returned by Telegram.</param>
+        /// <param name="partType">The type of the participants to get. Choose Recents not to filter</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TLChannelParticipants> GetParticipants(TLChannel channel, int stIdx = -1, int pageSize = -1, ParticipantFilterTypes partType = ParticipantFilterTypes.Recents, CancellationToken token = default(CancellationToken))
+        {
+            if (channel == null) return null;
+            return await GetParticipants(channel.Id, (long)channel.AccessHash, stIdx, pageSize, partType, token).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets the participants of the channel having the supplied type.
+        /// The method will auto-paginate results and return all the participants
+        /// </summary>
+        /// <param name="channelId">The id of the channel whose participants are requested</param>
+        /// <param name="accessHash">The access hash of the channel whose participants are requested</param>
+        /// <param name="stIdx">The index to start fetching from. -1 will automatically fetch all the results</param>
+        /// <param name="pageSize">How many results to be fetch on each iteration. 
+        /// Values smaller than 0 are ignored. If stIdx is set, a number of results smaller than pageSize might be returned by Telegram.</param>
+        /// <param name="partType">The type of the participants to get. Choose Recents not to filter</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TLChannelParticipants> GetParticipants(int channelId, long accessHash, int stIdx = -1, int pageSize = -1, ParticipantFilterTypes partType = ParticipantFilterTypes.Recents, CancellationToken token = default(CancellationToken))
+        {
+            TLAbsChannelParticipantsFilter filter;
+            switch (partType)
+            {
+                case ParticipantFilterTypes.Admins:
+                    filter = new TLChannelParticipantsAdmins();
+                    break;
+
+                case ParticipantFilterTypes.Kicked:
+                    filter = new TLChannelParticipantsKicked();
+                    break;
+
+                case ParticipantFilterTypes.Bots:
+                    filter = new TLChannelParticipantsBots();
+                    break;
+
+                case ParticipantFilterTypes.Recents:
+                    filter = new TLChannelParticipantsRecent();
+                    break;
+
+                //case ParticipantFilterTypes.Banned:
+                //    filter = new TLChannelParticipantsBanned();
+                //    break;
+
+                ////                case ParticipantFilterTypes.Restricted:
+                ////                    filter = new tlchannelparticipants
+
+                //case ParticipantFilterTypes.Contacts:
+                //    filter = new TLChannelParticipantsContacts();
+                //    break;
+
+                //case ParticipantFilterTypes.Search:
+                //    filter = new TLChannelParticipantsSearch();
+                //    break;
+
+                default:
+                    throw new NotImplementedException($"{partType} not implemented yet");
+            }
+
+            int total = 0;
+            int found = stIdx < 0 ? 0 : stIdx;
+            pageSize = pageSize < 0 ? DEFAULT_PAGE_SIZE : pageSize;
+
+            TLChannelParticipants ret = new TLChannelParticipants();
+            ret.Participants = new TLVector<TLAbsChannelParticipant>();
+            ret.Users = new TLVector<TLAbsUser>();
+
+            do
+            {
+                var req = new TLRequestGetParticipants()
+                {
+                    Channel = new TLInputChannel()
+                    {
+                        ChannelId = channelId,
+                        AccessHash = accessHash
+                    },
+                    Filter = filter,
+                    Offset = found,
+                    Limit = pageSize
+                };
+                var fchat = await SendRequestAsync<TLChannelParticipants>(req, token).ConfigureAwait(false);
+                total = fchat.Count;
+                found += fchat.Participants.Count;
+                foreach (var p in fchat.Participants)
+                    ret.Participants.Add(p);
+                foreach (var u in fchat.Users)
+                    ret.Users.Add(u);
+            } while (found < total && stIdx == -1);
+            ret.Count = ret.Participants.Count;
+            return ret;
+        }
+
+        /// <summary>
+        /// Invites the passed users to the specified channel
+        /// </summary>
+        /// <param name="channel">The descriptor of the channel to invite the users to</param>
+        /// <param name="users"></param>
+        /// <returns></returns>       
+        public async Task<TLUpdates> InviteToChannel(TLChannel channel, int[] users, CancellationToken token = default(CancellationToken))
+        {
+            return await InviteToChannel(channel.Id, (long)channel.AccessHash, users, token);
+        }
+
+        /// <summary>
+        /// Invites the passed users to the specified channel
+        /// </summary>
+        /// <param name="channelId">The id of the channel to invite the users to</param>
+        /// <param name="accessHash">The access hash of the channel to invite the users to</param>
+        /// <param name="users"></param>
+        /// <returns></returns>
+        public async Task<TLUpdates> InviteToChannel(int channelId, long accessHash, int[] users, CancellationToken token = default(CancellationToken))
+        {
+            TLVector<TLAbsInputUser> absUsers = new TLVector<TLAbsInputUser>();
+            foreach (var user in users)
+                absUsers.Add(new TLInputUser() { UserId = user });
+
+            var req = new TLRequestInviteToChannel()
+            {
+                Channel = new TLInputChannel()
+                {
+                    ChannelId = channelId,
+                    AccessHash = accessHash
+                },
+                Users = absUsers
+            };
+            var updates = await SendRequestAsync<TLUpdates>(req, token).ConfigureAwait(false);
+
+            return updates;
+        }
+
+        /// <summary>
+        /// Joins a chat invite and returns the updates
+        /// This method can't be used by a bot.
+        /// For a list of possible errors <see cref="https://core.telegram.org/method/messages.importChatInvite"/>
+        /// </summary>
+        /// <param name="hash">hash from t.me/joinchat/hash</param> 
+        /// <returns>The updates</returns>
+        public async Task<TLUpdates> ImportChatInvite(string hash, CancellationToken token = default(CancellationToken))
+        {
+            TLRequestImportChatInvite req = new TLRequestImportChatInvite()
+            {
+                Hash = hash
+            };
+            var updates = await SendRequestAsync<TLUpdates>(req, token).ConfigureAwait(false);
+            return updates;
+        }
+
+        /// <summary>
+        /// Resolves a given Telegram username to the corresponding object. A username can be a person's username or a group or a channel name.
+        /// </summary>
+        /// <param name="username">The telegram @username to resolve, without the @. It can be a person's username or a group or a channel name.</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TLResolvedPeer> ResolveUsername(string username, CancellationToken token = default(CancellationToken))
+        {
+            if (string.IsNullOrWhiteSpace(username)) return null;
+
+            TLRequestResolveUsername req = new TLRequestResolveUsername()
+            {
+                Username = username
+            };
+            var ret = await SendRequestAsync<TLResolvedPeer>(req, token).ConfigureAwait(false);
+            return ret;
+        }
+
+        /// <summary>
+        /// Checks whether or not the authenticated user has joined the chat already
+        /// </summary>
+        /// <param name="hash">Invite hash in t.me/joinchat/hash</param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<TLAbsChatInvite> CheckChatInvite(string hash, CancellationToken token = default(CancellationToken))
+        {
+            if (string.IsNullOrWhiteSpace(hash)) return null;
+
+            TLRequestCheckChatInvite req = new TLRequestCheckChatInvite()
+            {
+                Hash = hash
+            };
+            var ret = await SendAuthenticatedRequestAsync<TLAbsChatInvite>(req, token).ConfigureAwait(false);
+            return ret;
+        }
+
         private void OnUserAuthenticated(TLUser TLUser)
         {
             session.TLUser = TLUser;
@@ -466,7 +773,7 @@ namespace TgSharp.Core
         {
             get
             {
-                if (transport == null)
+                if (transport == null || sender == null)
                     return false;
                 return transport.IsConnected;
             }
