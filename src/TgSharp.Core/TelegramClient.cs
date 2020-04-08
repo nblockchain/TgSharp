@@ -18,8 +18,8 @@ using TgSharp.Core.Exceptions;
 using TgSharp.Core.MTProto.Crypto;
 using TgSharp.Core.Network;
 using TgSharp.Core.Network.Exceptions;
+using TgSharp.Core.Types;
 using TgSharp.Core.Utils;
-using TLSharp.Core.Types;
 using TLAuthorization = TeleSharp.TL.Auth.TLAuthorization;
 
 namespace TgSharp.Core

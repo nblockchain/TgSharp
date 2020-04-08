@@ -1,4 +1,4 @@
-﻿namespace TLSharp.Core.Types
+﻿namespace TgSharp.Core.Types
 {
     public enum ParticipantFilterTypes
     { 

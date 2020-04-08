@@ -1,4 +1,4 @@
-﻿namespace TLSharp.Core.Types
+﻿namespace TgSharp.Core.Types
 {
     /// <summary>
     /// When the Telegram server responds with a set of addresses to connect to, DataCenterIPVersion indicates a preference 
