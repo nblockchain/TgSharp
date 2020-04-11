@@ -45,7 +45,7 @@
     <Compile Include="Auth\Step1_PQRequest.cs" />
     <Compile Include="Auth\Step2_DHExchange.cs" />
     <Compile Include="Auth\Step3_CompleteDHExchange.cs" />
-    <Compile Include="DataCenterIPVersion.cs" />
+    <Compile Include="DataCenter.cs" />
     <Compile Include="Exceptions\CloudPasswordNeededException.cs" />
     <Compile Include="Exceptions\InvalidPhoneCodeException.cs" />
     <Compile Include="Exceptions\MissingApiConfigurationException.cs" />
@@ -71,11 +71,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Network\Requests\AckRequest.cs" />
     <Compile Include="Network\Requests\PingRequest.cs" />
+    <Compile Include="Types\DataCenterIPVersions.cs" />
+    <Compile Include="Types\ParticipantFilterTypes.cs" />
     <Compile Include="Utils\UploadHelper.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="TelegramClient.cs" />
     <Compile Include="Utils\Helpers.cs" />
-    <Compile Include="DataCenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
