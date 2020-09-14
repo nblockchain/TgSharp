@@ -210,7 +210,7 @@ namespace TgSharp.Core
             return request.Response.PhoneCodeHash;
         }
 
-        public async Task<TLUser> MakeAuthAsync(string phoneNumber, string phoneCodeHash, string code, string firstName = "", string lastName = "", CancellationToken token = default(CancellationToken))
+        public async Task<TLUser> MakeAuthAsync(string phoneNumber, string phoneCodeHash, string code, string password = "", string firstName = "", string lastName = "", CancellationToken token = default(CancellationToken))
         {
             if (String.IsNullOrWhiteSpace(phoneNumber))
                 throw new ArgumentNullException(nameof(phoneNumber));
@@ -222,13 +222,31 @@ namespace TgSharp.Core
                 throw new ArgumentNullException(nameof(code));
 
             var request = new TLRequestSignIn() { PhoneNumber = phoneNumber, PhoneCodeHash = phoneCodeHash, PhoneCode = code };
+            TLRequestCheckPassword requestCheckPassword = null;
 
-            await RequestWithDcMigration(request, token).ConfigureAwait(false);
+            try
+            {
+                await RequestWithDcMigration(request, token).ConfigureAwait(false);
+            }
+            catch (CloudPasswordNeededException ex)
+            {
+                if (password != "")
+                {
+                    requestCheckPassword = new TLRequestCheckPassword { Password = await SRPHelper.CheckPassword(this, password, token) };
+                    await RequestWithDcMigration(requestCheckPassword, token).ConfigureAwait(false);
+                }
+                else throw ex;
+            }
 
-            if (request.Response is TLAuthorization)
+            if (requestCheckPassword == null && request.Response is TLAuthorization)
             {
                 OnUserAuthenticated(((TLUser)((TLAuthorization)request.Response).User));
                 return ((TLUser)((TLAuthorization)request.Response).User);
+            }
+            else if (requestCheckPassword != null && requestCheckPassword.Response is TLAuthorization)
+            {
+                OnUserAuthenticated(((TLUser)((TLAuthorization)requestCheckPassword.Response).User));
+                return ((TLUser)((TLAuthorization)requestCheckPassword.Response).User);
             }
             else
             {

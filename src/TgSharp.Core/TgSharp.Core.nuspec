@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
-        <id>TgSharp</id>
-        <version>0.1</version>
-        <title>Telegram client library implemented in C#</title>
-                <authors>Ilya P</authors>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata>
+		<id>TgSharp</id>
+		<version>0.1</version>
+		<title>Telegram client library implemented in C#</title>
+		<authors>Ilya P</authors>
 		<owners>aarani, knocte</owners>
-        <projectUrl>https://github.com/nblockchain/TgSharp/</projectUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Unofficial Telegram (http://telegram.org) client library implemented in C#.
+		<license type="expression">MIT</license>
+		<projectUrl>https://github.com/nblockchain/TgSharp/</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>
+			Unofficial Telegram (http://telegram.org) client library implemented in C#.
 
-It's a perfect fit for any developer who would like to send data directly to Telegram users or write own custom Telegram client.</description>
-        <tags>telegram client, telegram API</tags>
-        <copyright>Copyright 2015-2020</copyright>
-    </metadata>
-    <files>
-        <file src="bin\Release\TgSharp.TL.dll" target="lib\net46\TgSharp.TL.dll" />
-    </files>
+			It's a perfect fit for any developer who would like to send data directly to Telegram users or write own custom Telegram client.
+		</description>
+		<tags>telegram client, telegram API</tags>
+		<copyright>Copyright 2015-2020</copyright>
+		<dependencies>
+			<group targetFramework="netstandard2.0">
+				<dependency id="Portable.BouncyCastle" version="1.8.6.7" />
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Release\netstandard2.0\TgSharp.TL.dll" target="lib\netstandard2.0\TgSharp.TL.dll" />
+	</files>
 </package>

@@ -144,6 +144,14 @@ namespace TgSharp.Tests
                 throw new Exception("CodeToAuthenticate is wrong in the app.config file, fill it with the code you just got now by SMS/Telegram",
                                     ex);
             }
+            catch (CloudPasswordNeededException ex)
+            {
+                if (!string.IsNullOrEmpty(PasswordToAuthenticate))
+                    user = await client.MakeAuthAsync(NumberToAuthenticate, hash, code, PasswordToAuthenticate);
+                else
+                    throw ex;
+            }
+
             Assert.IsNotNull(user);
             Assert.IsTrue(client.IsUserAuthorized());
         }

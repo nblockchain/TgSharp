@@ -13,12 +13,12 @@ jobs:
       run: Invoke-WebRequest -OutFile Nuget.exe $Env:NUGET_URL
 
     - name: Install Dependencies
-      run: ./Nuget.exe restore src/TgSharp.sln
+      run: dotnet restore
 
-    - name: setup-msbuild
-      uses: microsoft/setup-msbuild@v1
+    - name: Build
+      run: dotnet build
 
-    - name: Build & Upload Package
+    - name: Package && Upload
       run: |
         $date = get-date -format "yyyyMMdd-HHmm"
         $hash = & git rev-parse --short HEAD
@@ -32,7 +32,7 @@ jobs:
             $version = "$baseVersion--date$date.git-$hash"
         }
 
-        ./Nuget.exe pack src/TgSharp.Core/TgSharp.Core.csproj -Version $version -Build -Properties Configuration=Release
+        ./Nuget.exe pack src/TgSharp.Core/TgSharp.Core.csproj -Version $version -Properties Configuration=Release
         If ($Env:GITHUB_REF -eq 'refs/heads/master' -OR $Env:GITHUB_REF.StartsWith($tagPrefix)) {
             If ('${{ secrets.NUGET_API_KEY }}' -ne '') {
                 ./Nuget.exe push "TgSharp.$version.nupkg" ${{secrets.NUGET_API_KEY}} -Source https://api.nuget.org/v3/index.json
