@@ -25,6 +25,7 @@ namespace TgSharp.Core.Network
         private readonly TcpTransport transport;
         private readonly ISessionStore sessionStore;
         private readonly Session session;
+        private readonly Random random;
 
         public readonly List<ulong> needConfirmation = new List<ulong>();
 
@@ -33,6 +34,7 @@ namespace TgSharp.Core.Network
             this.transport = transport;
             this.sessionStore = sessionStore;
             this.session = session;
+            this.random = new Random();
         }
 
         private int GenerateSequence(bool confirmed)
@@ -82,7 +84,12 @@ namespace TgSharp.Core.Network
 
             byte[] msgKey;
             byte[] ciphertext;
-            using (MemoryStream plaintextPacket = makeMemory(8 + 8 + 8 + 4 + 4 + packet.Length))
+
+            int size = 8 + 8 + 8 + 4 + 4 + packet.Length;
+            var randomPaddingLength = random.Next(1024 / 16) * 16 + 16 - size % 16;
+            size += randomPaddingLength;
+
+            using (MemoryStream plaintextPacket = makeMemory(size))
             {
                 using (BinaryWriter plaintextWriter = new BinaryWriter(plaintextPacket))
                 {
@@ -93,7 +100,11 @@ namespace TgSharp.Core.Network
                     plaintextWriter.Write(packet.Length);
                     plaintextWriter.Write(packet);
 
-                    msgKey = Helpers.CalcMsgKey(plaintextPacket.GetBuffer());
+                    var padding = new byte[randomPaddingLength];
+                    random.NextBytes(padding);
+                    plaintextWriter.Write(padding);
+
+                    msgKey = Helpers.CalcMsgKey(session.AuthKey.Data, plaintextPacket.GetBuffer());
                     ciphertext = AES.EncryptAES(Helpers.CalcKey(session.AuthKey.Data, msgKey, true), plaintextPacket.GetBuffer());
                 }
             }
