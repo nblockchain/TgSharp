@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,13 +7,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using TgSharp.TL;
 using TgSharp.Core.Exceptions;
 using TgSharp.Core.MTProto;
 using TgSharp.Core.MTProto.Crypto;
 using TgSharp.Core.Network.Exceptions;
 using TgSharp.Core.Network.Requests;
 using TgSharp.Core.Utils;
+using TgSharp.TL;
 
 namespace TgSharp.Core.Network
 {
@@ -37,10 +36,14 @@ namespace TgSharp.Core.Network
 
         private int GenerateSequence(bool confirmed)
         {
-            lock (session.Lock) {
-                try {
+            lock (session.Lock)
+            {
+                try
+                {
                     return confirmed ? session.Sequence++ * 2 + 1 : session.Sequence * 2;
-                } finally {
+                }
+                finally
+                {
                     sessionStore.Save(session);
                 }
             }
@@ -71,7 +74,7 @@ namespace TgSharp.Core.Network
                 await Send(memory.ToArray(), request, token).ConfigureAwait(false);
             }
 
-            sessionStore.Save (session);
+            sessionStore.Save(session);
         }
 
         public async Task Send(byte[] packet, TLMethod request, CancellationToken token = default(CancellationToken))

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-using TgSharp.TL;
 using TgSharp.Core.MTProto;
 using TgSharp.Core.MTProto.Crypto;
+using TgSharp.TL;
 
 namespace TgSharp.Core
 {
