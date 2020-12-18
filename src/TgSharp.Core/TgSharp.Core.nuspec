@@ -4,13 +4,14 @@
         <id>TgSharp</id>
         <version>0.1</version>
         <title>Telegram client library implemented in C#</title>
-                <authors>Ilya P</authors>
-		<owners>aarani, knocte</owners>
+        <authors>Ilya P</authors>
+        <owners>aarani, knocte</owners>
         <projectUrl>https://github.com/nblockchain/TgSharp/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Unofficial Telegram (http://telegram.org) client library implemented in C#.
-
-It's a perfect fit for any developer who would like to send data directly to Telegram users or write own custom Telegram client.</description>
+        <description>
+            Unofficial Telegram (http://telegram.org) client library implemented in C#.
+            It's a perfect fit for any developer who would like to send data directly to Telegram users or write own custom Telegram client.
+        </description>
         <tags>telegram client, telegram API</tags>
         <copyright>Copyright 2015-2020</copyright>
     </metadata>
