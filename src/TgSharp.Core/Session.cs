@@ -32,7 +32,7 @@ namespace TgSharp.Core
         {
             var session = store.Load (sessionUserId);
             if (null == session) {
-                var defaultDataCenter = new DataCenter ();
+                var defaultDataCenter = new DataCenter (null);
                 session = new Session {
                     Id = GenerateRandomUlong (),
                     SessionUserId = sessionUserId,
@@ -68,19 +68,18 @@ namespace TgSharp.Core
 #endif
 
         public string SessionUserId { get; set; }
-        internal DataCenter DataCenter { get; set; }
+        public DataCenter DataCenter { get; set; }
         public AuthKey AuthKey { get; set; }
         public ulong Id { get; set; }
         public ulong Salt { get; set; }
         public int TimeOffset { get; set; }
         public long LastMessageId { get; set; }
         public int SessionExpires { get; set; }
-        public TLUser TLUser { get; set; }
-        private Random random;
+        public int UserId { get; set; }
+        private Random random = new Random ();
 
         public Session()
         {
-            random = new Random();
         }
 
         public long GetNewMessageId()

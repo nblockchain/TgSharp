@@ -59,7 +59,9 @@ namespace TgSharp.Core
                 throw new MissingApiConfigurationException("API_HASH");
 
             if (store == null)
-                store = new FileSessionStore();
+            {
+                store = JsonFileSessionStore.DefaultSessionStore ();
+            }
             this.store = store;
 
             this.apiHash = apiHash;
@@ -119,7 +121,7 @@ namespace TgSharp.Core
                 throw new InvalidOperationException($"Can't reconnect. Establish initial connection first.");
 
             TLExportedAuthorization exported = null;
-            if (Session.TLUser != null)
+            if (Session.UserId != default)
             {
                 TLRequestExportAuthorization exportAuthorization = new TLRequestExportAuthorization() { DcId = dcId };
                 exported = await SendRequestAsync<TLExportedAuthorization>(exportAuthorization, token).ConfigureAwait(false);
@@ -152,7 +154,7 @@ namespace TgSharp.Core
 
             await ConnectInternalAsync(true, token).ConfigureAwait(false);
 
-            if (Session.TLUser != null)
+            if (Session.UserId != default)
             {
                 TLRequestImportAuthorization importAuthorization = new TLRequestImportAuthorization() { Id = exported.Id, Bytes = exported.Bytes };
                 var imported = await SendRequestAsync<TLAuthorization>(importAuthorization, token).ConfigureAwait(false);
@@ -191,7 +193,7 @@ namespace TgSharp.Core
 
         public bool IsUserAuthorized()
         {
-            return Session.TLUser != null;
+            return Session.UserId != default;
         }
 
         public async Task<string> SendCodeRequestAsync(string phoneNumber, CancellationToken token = default(CancellationToken))
@@ -421,9 +423,9 @@ namespace TgSharp.Core
                 .ConfigureAwait(false);
         }
 
-        private void OnUserAuthenticated(TLUser TLUser)
+        private void OnUserAuthenticated(TLUser user)
         {
-            Session.TLUser = TLUser;
+            Session.UserId = user.Id;
             Session.SessionExpires = int.MaxValue;
 
             this.store.Save (Session);

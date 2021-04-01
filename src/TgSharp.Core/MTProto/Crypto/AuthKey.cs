@@ -9,6 +9,12 @@ namespace TgSharp.Core.MTProto.Crypto
         private byte[] key;
         private ulong keyId;
         private ulong auxHash;
+
+        [Obsolete ("Do not use, this ctor is public only for serialization")]
+        public AuthKey ()
+        {
+        }
+
         public AuthKey(BigInteger gab)
         {
             key = gab.ToByteArrayUnsigned();
@@ -69,6 +75,10 @@ namespace TgSharp.Core.MTProto.Crypto
             {
                 return key;
             }
+            set
+            {
+                key = value;
+            }
         }
 
         public ulong Id
@@ -76,6 +86,10 @@ namespace TgSharp.Core.MTProto.Crypto
             get
             {
                 return keyId;
+            }
+            set
+            {
+                keyId = value;
             }
         }
 

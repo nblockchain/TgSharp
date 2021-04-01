@@ -7,11 +7,16 @@ using TgSharp.Core.MTProto.Crypto;
 
 namespace TgSharp.Core
 {
-    public class FileSessionStore : ISessionStore
+    [Obsolete ("Use JsonFileSessionStore")]
+    public class FileSessionStore : BinaryFileSessionStore
+    {
+    }
+
+    public class BinaryFileSessionStore : ISessionStore
     {
         private readonly DirectoryInfo basePath;
 
-        public FileSessionStore (DirectoryInfo basePath = null)
+        public BinaryFileSessionStore (DirectoryInfo basePath = null)
         {
             if (basePath != null && !basePath.Exists) {
                 throw new ArgumentException ("basePath doesn't exist", nameof (basePath));
@@ -69,14 +74,14 @@ namespace TgSharp.Core
 
                 var doesAuthExist = reader.ReadInt32 () == 1;
                 int sessionExpires = 0;
-                TLUser TLUser = null;
+                int userId = default;
                 if (doesAuthExist) {
                     sessionExpires = reader.ReadInt32 ();
-                    TLUser = (TLUser)ObjectUtils.DeserializeObject (reader);
+                    userId = reader.ReadInt32 ();
                 }
 
                 var authData = Serializers.Bytes.Read (reader);
-                var defaultDataCenter = new DataCenter (serverAddress, port);
+                var defaultDataCenter = new DataCenter (null, serverAddress, port);
 
                 return new Session () {
                     AuthKey = new AuthKey (authData),
@@ -86,7 +91,7 @@ namespace TgSharp.Core
                     LastMessageId = lastMessageId,
                     TimeOffset = timeOffset,
                     SessionExpires = sessionExpires,
-                    TLUser = TLUser,
+                    UserId = userId,
                     SessionUserId = sessionUserId,
                     DataCenter = defaultDataCenter,
                 };
@@ -105,10 +110,10 @@ namespace TgSharp.Core
                 Serializers.String.Write (writer, session.DataCenter.Address);
                 writer.Write (session.DataCenter.Port);
 
-                if (session.TLUser != null) {
+                if (session.UserId != default) {
                     writer.Write (1);
                     writer.Write (session.SessionExpires);
-                    ObjectUtils.SerializeObject (session.TLUser, writer);
+                    writer.Write (session.UserId);
                 } else {
                     writer.Write (0);
                 }
