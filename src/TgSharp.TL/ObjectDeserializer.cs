@@ -18,7 +18,7 @@ namespace TgSharp.TL
             }
             catch (Exception ex)
             {
-                throw new InvalidDataException("Invalid constructor, or invalid TLContext static initialization", ex);
+                throw new InvalidDataException($"Unknown object constructor ({Constructor}), this should not happen feel free to post an issue on our Github repository.", ex);
             }
 
             if (t.IsSubclassOf(typeof(TLMethod)))
@@ -39,7 +39,8 @@ namespace TgSharp.TL
         }
         public static TLVector<T> DeserializeVector<T>(BinaryReader reader)
         {
-            if (reader.ReadInt32() != 481674261) throw new InvalidDataException("Bad Constructor");
+            int constructor = reader.ReadInt32();
+            if (constructor != 481674261) throw new InvalidDataException($"Incorrect vector constructor, expected {481674261} received {constructor}");
             TLVector<T> t = new TLVector<T>();
             t.DeserializeBody(reader);
             return t;
