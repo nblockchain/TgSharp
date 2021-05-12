@@ -240,12 +240,6 @@ If you just have questions about how to use TgSharp, use our Telegram channel (h
 
 Without information listed above your issue will be closed.
 
-
-# Donations
-
-Please send your donation to this ETH address (owned by Afshin Arani): 0xbfd1b684e0DdA5C219e11315682a9722b3194131
-
-
 # Support
 
 If you have troubles while using TgSharp, we may be able to help you; access our telegram channel first, and ask for "Paid support".
