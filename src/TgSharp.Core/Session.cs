@@ -60,18 +60,6 @@ namespace TgSharp.Core
         internal object Lock = new object ();
 
         public int Sequence { get; set; }
-#if CI
-            // see the same CI-wrapped assignment in .FromBytes(), but this one will become useful
-            // when we generate a new session.dat for CI again
-            = CurrentTime ();
-
-        // this is similar to the unixTime but rooted on the worst year of humanity instead of 1970
-        internal static int CurrentTime ()
-        {
-            return (int)DateTime.UtcNow.Subtract (new DateTime (2020, 1, 1)).TotalSeconds;
-        }
-#endif
-
         public string SessionUserId { get; set; }
         internal DataCenter DataCenter { get; set; }
         public AuthKey AuthKey { get; set; }
