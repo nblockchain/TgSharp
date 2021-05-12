@@ -4,6 +4,7 @@ using System.IO;
 using TgSharp.TL;
 using TgSharp.Core.MTProto;
 using TgSharp.Core.MTProto.Crypto;
+using System.Security.Cryptography;
 
 namespace TgSharp.Core
 {
@@ -39,6 +40,10 @@ namespace TgSharp.Core
                     DataCenter = defaultDataCenter,
                 };
             }
+            session.Sequence = 0;
+            byte[] randomSessionId = new byte[8];
+            RandomNumberGenerator.Create().GetNonZeroBytes(randomSessionId);
+            session.Id = BitConverter.ToUInt64(randomSessionId, 0);
             return session;
         }
 
