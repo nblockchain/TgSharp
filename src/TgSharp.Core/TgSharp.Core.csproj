@@ -53,6 +53,7 @@
     <Compile Include="Exceptions\InvalidPhoneCodeException.cs" />
     <Compile Include="Exceptions\MissingApiConfigurationException.cs" />
     <Compile Include="MTProto\Crypto\AES.cs" />
+    <Compile Include="MTProto\Crypto\AesCtr.cs" />
     <Compile Include="MTProto\Crypto\AuthKey.cs" />
     <Compile Include="MTProto\Crypto\BigInteger.cs" />
     <Compile Include="MTProto\Crypto\Crc32.cs" />
