@@ -118,6 +118,16 @@ namespace TgSharp.Tests
             NumberToAddToChat = ConfigurationManager.AppSettings[nameof(NumberToAddToChat)];
             if (string.IsNullOrEmpty(NumberToAddToChat))
                 Debug.WriteLine(appConfigMsgWarning, nameof(NumberToAddToChat));
+
+            NumberToSendMessage = ConfigurationManager.AppSettings[nameof(NumberToSendMessage)];
+            if (string.IsNullOrWhiteSpace(NumberToSendMessage))
+                Debug.WriteLine(appConfigMsgWarning, nameof(NumberToSendMessage));
+            else
+                NumberToSendMessage =
+                    NumberToSendMessage.StartsWith("+") ?
+                    NumberToSendMessage.Substring(1, NumberToSendMessage.Length - 1) :
+                    NumberToSendMessage;
+
         }
 
         public virtual async Task AuthUser()
@@ -150,15 +160,6 @@ namespace TgSharp.Tests
 
         public virtual async Task SendMessageTest()
         {
-            NumberToSendMessage = ConfigurationManager.AppSettings[nameof(NumberToSendMessage)];
-            if (string.IsNullOrWhiteSpace(NumberToSendMessage))
-                throw new Exception($"Please fill the '{nameof(NumberToSendMessage)}' setting in app.config file first");
-
-            // this is because the contacts in the address come without the "+" prefix
-            var normalizedNumber = NumberToSendMessage.StartsWith("+") ?
-                NumberToSendMessage.Substring(1, NumberToSendMessage.Length - 1) :
-                NumberToSendMessage;
-
             var client = NewClient();
 
             await client.ConnectAsync();
@@ -167,7 +168,7 @@ namespace TgSharp.Tests
 
             var user = result.Users
                 .OfType<TLUser>()
-                .FirstOrDefault(x => x.Phone == normalizedNumber);
+                .FirstOrDefault(x => x.Phone == NumberToSendMessage);
 
             if (user == null)
             {
