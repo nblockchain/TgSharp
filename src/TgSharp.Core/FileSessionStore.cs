@@ -53,7 +53,15 @@ namespace TgSharp.Core
             string sessionFileName = $"{session.SessionUserId}.dat";
             var sessionPath = basePath == null ? sessionFileName :
                 Path.Combine (basePath.FullName, sessionFileName);
-            File.Delete(sessionFileName);
+            
+            if (File.Exists(sessionPath))
+            {
+                File.Delete(sessionFileName);
+            }
+            else
+            {
+                // No throwing exception if not exists
+            }
         }
 
         public static Session FromBytes (byte [] buffer, ISessionStore store, string sessionUserId)
