@@ -48,6 +48,22 @@ namespace TgSharp.Core
             }
         }
 
+        public void Delete (Session session)
+        {
+            string sessionFileName = $"{session.SessionUserId}.dat";
+            var sessionPath = basePath == null ? sessionFileName :
+                Path.Combine (basePath.FullName, sessionFileName);
+            
+            if (File.Exists(sessionPath))
+            {
+                File.Delete(sessionFileName);
+            }
+            else
+            {
+                // No throwing exception if not exists
+            }
+        }
+
         public static Session FromBytes (byte [] buffer, ISessionStore store, string sessionUserId)
         {
             using (var stream = new MemoryStream (buffer))
