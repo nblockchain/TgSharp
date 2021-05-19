@@ -52,15 +52,6 @@ namespace TgSharp.Core
         {
             using (var stream = new MemoryStream (buffer))
             using (var reader = new BinaryReader (stream)) {
-                var id = reader.ReadUInt64 ();
-                var sequence = reader.ReadInt32 ();
-
-                // we do this in CI when running tests so that the they can always use a
-                // higher sequence than previous run
-#if CI
-                sequence = Session.CurrentTime();
-#endif
-
                 var salt = reader.ReadUInt64 ();
                 var lastMessageId = reader.ReadInt64 ();
                 var timeOffset = reader.ReadInt32 ();
@@ -80,9 +71,7 @@ namespace TgSharp.Core
 
                 return new Session () {
                     AuthKey = new AuthKey (authData),
-                    Id = id,
                     Salt = salt,
-                    Sequence = sequence,
                     LastMessageId = lastMessageId,
                     TimeOffset = timeOffset,
                     SessionExpires = sessionExpires,
@@ -97,8 +86,6 @@ namespace TgSharp.Core
         {
             using (var stream = new MemoryStream ())
             using (var writer = new BinaryWriter (stream)) {
-                writer.Write (session.Id);
-                writer.Write (session.Sequence);
                 writer.Write (session.Salt);
                 writer.Write (session.LastMessageId);
                 writer.Write (session.TimeOffset);
