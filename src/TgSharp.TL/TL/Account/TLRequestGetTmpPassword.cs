@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(1151208273)]
-    public class TLRequestGetTmpPassword : TLMethod
+    public class TLRequestGetTmpPassword : TLMethod<Account.TLTmpPassword>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Account
 
         public TLAbsInputCheckPasswordSRP Password { get; set; }
         public int Period { get; set; }
-        public Account.TLTmpPassword Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Account
             bw.Write(Period);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Account.TLTmpPassword)ObjectUtils.DeserializeObject(br);
         }

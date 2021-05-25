@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(306054633)]
-    public class TLRequestGetParticipants : TLMethod
+    public class TLRequestGetParticipants : TLMethod<Channels.TLAbsChannelParticipants>
     {
         public override int Constructor
         {
@@ -25,7 +25,7 @@ namespace TgSharp.TL.Channels
         public int Offset { get; set; }
         public int Limit { get; set; }
         public int Hash { get; set; }
-        public Channels.TLAbsChannelParticipants Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -51,7 +51,7 @@ namespace TgSharp.TL.Channels
             bw.Write(Hash);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Channels.TLAbsChannelParticipants)ObjectUtils.DeserializeObject(br);
         }

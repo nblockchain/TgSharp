@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(-122669393)]
-    public class TLRequestGetAdminedPublicChannels : TLMethod
+    public class TLRequestGetAdminedPublicChannels : TLMethod<Messages.TLAbsChats>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Channels
         public int Flags { get; set; }
         public bool ByLocation { get; set; }
         public bool CheckLimit { get; set; }
-        public Messages.TLAbsChats Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -43,7 +43,7 @@ namespace TgSharp.TL.Channels
             bw.Write(Flags);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsChats)ObjectUtils.DeserializeObject(br);
         }

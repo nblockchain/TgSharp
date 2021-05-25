@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(1995661875)]
-    public class TLRequestSaveAutoDownloadSettings : TLMethod
+    public class TLRequestSaveAutoDownloadSettings : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Account
         public bool Low { get; set; }
         public bool High { get; set; }
         public TLAutoDownloadSettings Settings { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -46,7 +46,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(Settings, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

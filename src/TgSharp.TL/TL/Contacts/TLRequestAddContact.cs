@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Contacts
 {
     [TLObject(-386636848)]
-    public class TLRequestAddContact : TLMethod
+    public class TLRequestAddContact : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -26,7 +26,7 @@ namespace TgSharp.TL.Contacts
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -53,7 +53,7 @@ namespace TgSharp.TL.Contacts
             StringUtil.Serialize(Phone, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

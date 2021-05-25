@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(852135825)]
-    public class TLRequestGetWebPage : TLMethod
+    public class TLRequestGetWebPage : TLMethod<TLAbsWebPage>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public string Url { get; set; }
         public int Hash { get; set; }
-        public TLAbsWebPage Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             bw.Write(Hash);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsWebPage)ObjectUtils.DeserializeObject(br);
         }

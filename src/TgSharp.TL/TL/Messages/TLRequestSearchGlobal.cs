@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-1083038300)]
-    public class TLRequestSearchGlobal : TLMethod
+    public class TLRequestSearchGlobal : TLMethod<Messages.TLAbsMessages>
     {
         public override int Constructor
         {
@@ -27,7 +27,7 @@ namespace TgSharp.TL.Messages
         public TLAbsInputPeer OffsetPeer { get; set; }
         public int OffsetId { get; set; }
         public int Limit { get; set; }
-        public Messages.TLAbsMessages Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -62,7 +62,7 @@ namespace TgSharp.TL.Messages
             bw.Write(Limit);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsMessages)ObjectUtils.DeserializeObject(br);
         }

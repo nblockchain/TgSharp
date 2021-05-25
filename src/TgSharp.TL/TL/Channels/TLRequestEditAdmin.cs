@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(-751007486)]
-    public class TLRequestEditAdmin : TLMethod
+    public class TLRequestEditAdmin : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Channels
         public TLAbsInputUser UserId { get; set; }
         public TLChatAdminRights AdminRights { get; set; }
         public string Rank { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -48,7 +48,7 @@ namespace TgSharp.TL.Channels
             StringUtil.Serialize(Rank, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

@@ -20,7 +20,6 @@ namespace TgSharp.TL
             }
         }
 
-        // manual edit: TLJSONObjectValue->TLJsonObjectValue
         public TLVector<TLJsonObjectValue> Value { get; set; }
 
         public void ComputeFlags()
@@ -30,8 +29,7 @@ namespace TgSharp.TL
 
         public override void DeserializeBody(BinaryReader br)
         {
-            // manual edit: TLJSONObjectValue->TLJsonObjectValue
-            Value = (TLVector<TLJsonObjectValue>)ObjectUtils.DeserializeVector<TLJsonObjectValue> (br);
+            Value = (TLVector<TLJsonObjectValue>)ObjectUtils.DeserializeVector<TLJsonObjectValue>(br);
         }
 
         public override void SerializeBody(BinaryWriter bw)

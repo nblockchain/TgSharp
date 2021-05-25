@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(300429806)]
-    public class TLRequestGetInactiveChannels : TLMethod
+    public class TLRequestGetInactiveChannels : TLMethod<Messages.TLInactiveChats>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Channels
             }
         }
 
-        public Messages.TLInactiveChats Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Channels
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLInactiveChats)ObjectUtils.DeserializeObject(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Upload
 {
     [TLObject(619086221)]
-    public class TLRequestGetWebFile : TLMethod
+    public class TLRequestGetWebFile : TLMethod<Upload.TLWebFile>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Upload
         public TLAbsInputWebFileLocation Location { get; set; }
         public int Offset { get; set; }
         public int Limit { get; set; }
-        public Upload.TLWebFile Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Upload
             bw.Write(Limit);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Upload.TLWebFile)ObjectUtils.DeserializeObject(br);
         }

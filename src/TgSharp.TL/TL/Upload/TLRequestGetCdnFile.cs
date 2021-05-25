@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Upload
 {
     [TLObject(536919235)]
-    public class TLRequestGetCdnFile : TLMethod
+    public class TLRequestGetCdnFile : TLMethod<Upload.TLAbsCdnFile>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Upload
         public byte[] FileToken { get; set; }
         public int Offset { get; set; }
         public int Limit { get; set; }
-        public Upload.TLAbsCdnFile Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Upload
             bw.Write(Limit);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Upload.TLAbsCdnFile)ObjectUtils.DeserializeObject(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(238054714)]
-    public class TLRequestReadHistory : TLMethod
+    public class TLRequestReadHistory : TLMethod<Messages.TLAffectedMessages>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public TLAbsInputPeer Peer { get; set; }
         public int MaxId { get; set; }
-        public Messages.TLAffectedMessages Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             bw.Write(MaxId);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAffectedMessages)ObjectUtils.DeserializeObject(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(1378703997)]
-    public class TLRequestGetAppUpdate : TLMethod
+    public class TLRequestGetAppUpdate : TLMethod<Help.TLAbsAppUpdate>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Help
         }
 
         public string Source { get; set; }
-        public Help.TLAbsAppUpdate Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Help
             StringUtil.Serialize(Source, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Help.TLAbsAppUpdate)ObjectUtils.DeserializeObject(br);
         }

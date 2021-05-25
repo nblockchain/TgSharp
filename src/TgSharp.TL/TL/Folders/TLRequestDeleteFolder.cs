@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Folders
 {
     [TLObject(472471681)]
-    public class TLRequestDeleteFolder : TLMethod
+    public class TLRequestDeleteFolder : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Folders
         }
 
         public int FolderId { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Folders
             bw.Write(FolderId);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

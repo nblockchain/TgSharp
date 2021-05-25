@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(234312524)]
-    public class TLRequestExportChatInvite : TLMethod
+    public class TLRequestExportChatInvite : TLMethod<TLAbsExportedChatInvite>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Messages
         }
 
         public TLAbsInputPeer Peer { get; set; }
-        public TLAbsExportedChatInvite Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Messages
             ObjectUtils.SerializeObject(Peer, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsExportedChatInvite)ObjectUtils.DeserializeObject(br);
         }

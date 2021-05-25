@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-148247912)]
-    public class TLRequestAcceptUrlAuth : TLMethod
+    public class TLRequestAcceptUrlAuth : TLMethod<TLAbsUrlAuthResult>
     {
         public override int Constructor
         {
@@ -25,7 +25,7 @@ namespace TgSharp.TL.Messages
         public TLAbsInputPeer Peer { get; set; }
         public int MsgId { get; set; }
         public int ButtonId { get; set; }
-        public TLAbsUrlAuthResult Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -50,7 +50,7 @@ namespace TgSharp.TL.Messages
             bw.Write(ButtonId);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUrlAuthResult)ObjectUtils.DeserializeObject(br);
         }

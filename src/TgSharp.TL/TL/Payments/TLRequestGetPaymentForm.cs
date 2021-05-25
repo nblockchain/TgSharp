@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Payments
 {
     [TLObject(-1712285883)]
-    public class TLRequestGetPaymentForm : TLMethod
+    public class TLRequestGetPaymentForm : TLMethod<Payments.TLPaymentForm>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Payments
         }
 
         public int MsgId { get; set; }
-        public Payments.TLPaymentForm Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Payments
             bw.Write(MsgId);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Payments.TLPaymentForm)ObjectUtils.DeserializeObject(br);
         }

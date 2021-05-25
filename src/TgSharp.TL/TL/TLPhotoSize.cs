@@ -21,7 +21,6 @@ namespace TgSharp.TL
         }
 
         public string Type { get; set; }
-        // manual edit: FileLocation->TLFileLocationToBeDeprecated
         public TLFileLocationToBeDeprecated Location { get; set; }
         public int W { get; set; }
         public int H { get; set; }
@@ -35,7 +34,6 @@ namespace TgSharp.TL
         public override void DeserializeBody(BinaryReader br)
         {
             Type = StringUtil.Deserialize(br);
-            // manual edit: FileLocation->TLFileLocationToBeDeprecated
             Location = (TLFileLocationToBeDeprecated)ObjectUtils.DeserializeObject(br);
             W = br.ReadInt32();
             H = br.ReadInt32();

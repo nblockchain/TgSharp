@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(864953444)]
-    public class TLRequestGetDocumentByHash : TLMethod
+    public class TLRequestGetDocumentByHash : TLMethod<TLAbsDocument>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Messages
         public byte[] Sha256 { get; set; }
         public int Size { get; set; }
         public string MimeType { get; set; }
-        public TLAbsDocument Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Messages
             StringUtil.Serialize(MimeType, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsDocument)ObjectUtils.DeserializeObject(br);
         }

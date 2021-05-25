@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Updates
 {
     [TLObject(-304838614)]
-    public class TLRequestGetState : TLMethod
+    public class TLRequestGetState : TLMethod<Updates.TLState>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Updates
             }
         }
 
-        public Updates.TLState Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Updates
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Updates.TLState)ObjectUtils.DeserializeObject(br);
         }

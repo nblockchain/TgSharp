@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(1224152952)]
-    public class TLRequestEditMessage : TLMethod
+    public class TLRequestEditMessage : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -29,7 +29,7 @@ namespace TgSharp.TL.Messages
         public TLAbsReplyMarkup ReplyMarkup { get; set; }
         public TLVector<TLAbsMessageEntity> Entities { get; set; }
         public int? ScheduleDate { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -87,7 +87,7 @@ namespace TgSharp.TL.Messages
                 bw.Write(ScheduleDate.Value);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

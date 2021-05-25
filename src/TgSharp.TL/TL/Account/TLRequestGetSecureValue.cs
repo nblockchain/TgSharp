@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(1936088002)]
-    public class TLRequestGetSecureValue : TLMethod
+    public class TLRequestGetSecureValue : TLMethod<TLVector<TLSecureValue>>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Account
         }
 
         public TLVector<TLAbsSecureValueType> Types { get; set; }
-        public TLVector<TLSecureValue> Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(Types, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLVector<TLSecureValue>)ObjectUtils.DeserializeVector<TLSecureValue>(br);
         }

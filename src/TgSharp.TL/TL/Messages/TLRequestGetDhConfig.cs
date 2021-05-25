@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(651135312)]
-    public class TLRequestGetDhConfig : TLMethod
+    public class TLRequestGetDhConfig : TLMethod<Messages.TLAbsDhConfig>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public int Version { get; set; }
         public int RandomLength { get; set; }
-        public Messages.TLAbsDhConfig Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             bw.Write(RandomLength);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsDhConfig)ObjectUtils.DeserializeObject(br);
         }

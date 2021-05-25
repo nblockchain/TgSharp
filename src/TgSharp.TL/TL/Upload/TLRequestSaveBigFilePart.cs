@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Upload
 {
     [TLObject(-562337987)]
-    public class TLRequestSaveBigFilePart : TLMethod
+    public class TLRequestSaveBigFilePart : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Upload
         public int FilePart { get; set; }
         public int FileTotalParts { get; set; }
         public byte[] Bytes { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -48,7 +48,7 @@ namespace TgSharp.TL.Upload
             BytesUtil.Serialize(Bytes, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

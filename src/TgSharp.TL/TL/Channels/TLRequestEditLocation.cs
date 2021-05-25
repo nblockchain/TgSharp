@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(1491484525)]
-    public class TLRequestEditLocation : TLMethod
+    public class TLRequestEditLocation : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Channels
         public TLAbsInputChannel Channel { get; set; }
         public TLAbsInputGeoPoint GeoPoint { get; set; }
         public string Address { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Channels
             StringUtil.Serialize(Address, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

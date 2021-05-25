@@ -38,7 +38,7 @@ namespace /* NAMESPACE */
             /* SERIALIZE */
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             /* DESERIALIZEResp */
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(150761757)]
-    public class TLRequestGetAccountTTL : TLMethod
+    public class TLRequestGetAccountTTL : TLMethod<TLAccountDaysTTL>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Account
             }
         }
 
-        public TLAccountDaysTTL Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Account
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAccountDaysTTL)ObjectUtils.DeserializeObject(br);
         }

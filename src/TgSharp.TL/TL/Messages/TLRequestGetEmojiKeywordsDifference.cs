@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(352892591)]
-    public class TLRequestGetEmojiKeywordsDifference : TLMethod
+    public class TLRequestGetEmojiKeywordsDifference : TLMethod<TLEmojiKeywordsDifference>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public string LangCode { get; set; }
         public int FromVersion { get; set; }
-        public TLEmojiKeywordsDifference Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             bw.Write(FromVersion);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLEmojiKeywordsDifference)ObjectUtils.DeserializeObject(br);
         }

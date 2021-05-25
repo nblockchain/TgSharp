@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Users
 {
     [TLObject(-1865902923)]
-    public class TLRequestSetSecureValueErrors : TLMethod
+    public class TLRequestSetSecureValueErrors : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Users
 
         public TLAbsInputUser Id { get; set; }
         public TLVector<TLAbsSecureValueError> Errors { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Users
             ObjectUtils.SerializeObject(Errors, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

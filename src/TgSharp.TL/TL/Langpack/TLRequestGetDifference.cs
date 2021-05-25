@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Langpack
 {
     [TLObject(-845657435)]
-    public class TLRequestGetDifference : TLMethod
+    public class TLRequestGetDifference : TLMethod<TLLangPackDifference>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Langpack
         public string LangPack { get; set; }
         public string LangCode { get; set; }
         public int FromVersion { get; set; }
-        public TLLangPackDifference Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Langpack
             bw.Write(FromVersion);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLLangPackDifference)ObjectUtils.DeserializeObject(br);
         }

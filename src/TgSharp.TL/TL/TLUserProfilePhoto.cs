@@ -21,9 +21,7 @@ namespace TgSharp.TL
         }
 
         public long PhotoId { get; set; }
-        // manual edit: FileLocation->TLFileLocationToBeDeprecated
         public TLFileLocationToBeDeprecated PhotoSmall { get; set; }
-        // manual edit: FileLocation->TLFileLocationToBeDeprecated
         public TLFileLocationToBeDeprecated PhotoBig { get; set; }
         public int DcId { get; set; }
 
@@ -35,9 +33,7 @@ namespace TgSharp.TL
         public override void DeserializeBody(BinaryReader br)
         {
             PhotoId = br.ReadInt64();
-            // manual edit: FileLocation->TLFileLocationToBeDeprecated
             PhotoSmall = (TLFileLocationToBeDeprecated)ObjectUtils.DeserializeObject(br);
-            // manual edit: FileLocation->TLFileLocationToBeDeprecated
             PhotoBig = (TLFileLocationToBeDeprecated)ObjectUtils.DeserializeObject(br);
             DcId = br.ReadInt32();
         }

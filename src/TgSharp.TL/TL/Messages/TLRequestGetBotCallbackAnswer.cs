@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-2130010132)]
-    public class TLRequestGetBotCallbackAnswer : TLMethod
+    public class TLRequestGetBotCallbackAnswer : TLMethod<Messages.TLBotCallbackAnswer>
     {
         public override int Constructor
         {
@@ -25,7 +25,7 @@ namespace TgSharp.TL.Messages
         public TLAbsInputPeer Peer { get; set; }
         public int MsgId { get; set; }
         public byte[] Data { get; set; }
-        public Messages.TLBotCallbackAnswer Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -55,7 +55,7 @@ namespace TgSharp.TL.Messages
                 BytesUtil.Serialize(Data, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLBotCallbackAnswer)ObjectUtils.DeserializeObject(br);
         }

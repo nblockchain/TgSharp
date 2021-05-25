@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(-966677240)]
-    public class TLRequestGetPassportConfig : TLMethod
+    public class TLRequestGetPassportConfig : TLMethod<Help.TLAbsPassportConfig>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Help
         }
 
         public int Hash { get; set; }
-        public Help.TLAbsPassportConfig Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Help
             bw.Write(Hash);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Help.TLAbsPassportConfig)ObjectUtils.DeserializeObject(br);
         }

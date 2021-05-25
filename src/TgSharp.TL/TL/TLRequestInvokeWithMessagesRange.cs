@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL
 {
     [TLObject(911373810)]
-    public class TLRequestInvokeWithMessagesRange : TLMethod
+    public class TLRequestInvokeWithMessagesRange : TLMethod<TLObject>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL
 
         public TLMessageRange Range { get; set; }
         public TLObject Query { get; set; }
-        public TLObject Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL
             ObjectUtils.SerializeObject(Query, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLObject)ObjectUtils.DeserializeObject(br);
         }

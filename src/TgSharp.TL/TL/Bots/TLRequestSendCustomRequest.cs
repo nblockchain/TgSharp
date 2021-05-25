@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Bots
 {
     [TLObject(-1440257555)]
-    public class TLRequestSendCustomRequest : TLMethod
+    public class TLRequestSendCustomRequest : TLMethod<TLDataJSON>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Bots
 
         public string CustomMethod { get; set; }
         public TLDataJSON Params { get; set; }
-        public TLDataJSON Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Bots
             ObjectUtils.SerializeObject(Params, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLDataJSON)ObjectUtils.DeserializeObject(br);
         }

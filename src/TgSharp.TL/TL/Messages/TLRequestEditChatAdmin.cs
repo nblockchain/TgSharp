@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-1444503762)]
-    public class TLRequestEditChatAdmin : TLMethod
+    public class TLRequestEditChatAdmin : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Messages
         public int ChatId { get; set; }
         public TLAbsInputUser UserId { get; set; }
         public bool IsAdmin { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Messages
             BoolUtil.Serialize(IsAdmin, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(-419267436)]
-    public class TLRequestAcceptAuthorization : TLMethod
+    public class TLRequestAcceptAuthorization : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -25,7 +25,7 @@ namespace TgSharp.TL.Account
         public string PublicKey { get; set; }
         public TLVector<TLSecureValueHash> ValueHashes { get; set; }
         public TLSecureCredentialsEncrypted Credentials { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -51,7 +51,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(Credentials, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

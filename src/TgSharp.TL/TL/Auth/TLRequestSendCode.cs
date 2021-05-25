@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Auth
 {
     [TLObject(-1502141361)]
-    public class TLRequestSendCode : TLMethod
+    public class TLRequestSendCode : TLMethod<Auth.TLSentCode>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Auth
         public int ApiId { get; set; }
         public string ApiHash { get; set; }
         public TLCodeSettings Settings { get; set; }
-        public Auth.TLSentCode Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -48,7 +48,7 @@ namespace TgSharp.TL.Auth
             ObjectUtils.SerializeObject(Settings, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Auth.TLSentCode)ObjectUtils.DeserializeObject(br);
         }

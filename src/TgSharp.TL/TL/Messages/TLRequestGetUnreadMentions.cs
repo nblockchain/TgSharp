@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(1180140658)]
-    public class TLRequestGetUnreadMentions : TLMethod
+    public class TLRequestGetUnreadMentions : TLMethod<Messages.TLAbsMessages>
     {
         public override int Constructor
         {
@@ -26,7 +26,7 @@ namespace TgSharp.TL.Messages
         public int Limit { get; set; }
         public int MaxId { get; set; }
         public int MinId { get; set; }
-        public Messages.TLAbsMessages Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -54,7 +54,7 @@ namespace TgSharp.TL.Messages
             bw.Write(MinId);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsMessages)ObjectUtils.DeserializeObject(br);
         }

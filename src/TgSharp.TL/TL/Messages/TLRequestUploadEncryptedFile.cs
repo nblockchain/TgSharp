@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(1347929239)]
-    public class TLRequestUploadEncryptedFile : TLMethod
+    public class TLRequestUploadEncryptedFile : TLMethod<TLAbsEncryptedFile>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public TLInputEncryptedChat Peer { get; set; }
         public TLAbsInputEncryptedFile File { get; set; }
-        public TLAbsEncryptedFile Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             ObjectUtils.SerializeObject(File, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsEncryptedFile)ObjectUtils.DeserializeObject(br);
         }

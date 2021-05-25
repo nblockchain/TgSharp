@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(-2108208411)]
-    public class TLRequestSendChangePhoneCode : TLMethod
+    public class TLRequestSendChangePhoneCode : TLMethod<Auth.TLSentCode>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Account
 
         public string PhoneNumber { get; set; }
         public TLCodeSettings Settings { get; set; }
-        public Auth.TLSentCode Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(Settings, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Auth.TLSentCode)ObjectUtils.DeserializeObject(br);
         }

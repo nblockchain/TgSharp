@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Stickers
 {
     [TLObject(-4795190)]
-    public class TLRequestChangeStickerPosition : TLMethod
+    public class TLRequestChangeStickerPosition : TLMethod<Messages.TLStickerSet>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Stickers
 
         public TLAbsInputDocument Sticker { get; set; }
         public int Position { get; set; }
-        public Messages.TLStickerSet Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Stickers
             bw.Write(Position);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLStickerSet)ObjectUtils.DeserializeObject(br);
         }

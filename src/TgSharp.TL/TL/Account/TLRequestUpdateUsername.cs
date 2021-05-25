@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(1040964988)]
-    public class TLRequestUpdateUsername : TLMethod
+    public class TLRequestUpdateUsername : TLMethod<TLAbsUser>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Account
         }
 
         public string Username { get; set; }
-        public TLAbsUser Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Account
             StringUtil.Serialize(Username, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUser)ObjectUtils.DeserializeObject(br);
         }

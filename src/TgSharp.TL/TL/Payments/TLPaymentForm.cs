@@ -30,7 +30,6 @@ namespace TgSharp.TL.Payments
         public string NativeProvider { get; set; }
         public TLDataJSON NativeParams { get; set; }
         public TLPaymentRequestedInfo SavedInfo { get; set; }
-        // manual edit: PaymentSavedCredentials -> TLPaymentSavedCredentialsCard
         public TLPaymentSavedCredentialsCard SavedCredentials { get; set; }
         public TLVector<TLAbsUser> Users { get; set; }
 
@@ -64,7 +63,6 @@ namespace TgSharp.TL.Payments
                 SavedInfo = null;
 
             if ((Flags & 2) != 0)
-                // manual edit: PaymentSavedCredentials -> TLPaymentSavedCredentialsCard
                 SavedCredentials = (TLPaymentSavedCredentialsCard)ObjectUtils.DeserializeObject(br);
             else
                 SavedCredentials = null;

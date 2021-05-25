@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(405695855)]
-    public class TLRequestGetWebAuthorizations : TLMethod
+    public class TLRequestGetWebAuthorizations : TLMethod<Account.TLWebAuthorizations>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Account
             }
         }
 
-        public Account.TLWebAuthorizations Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Account
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Account.TLWebAuthorizations)ObjectUtils.DeserializeObject(br);
         }

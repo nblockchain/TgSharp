@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Auth
 {
     [TLObject(-2131827673)]
-    public class TLRequestSignUp : TLMethod
+    public class TLRequestSignUp : TLMethod<Auth.TLAbsAuthorization>
     {
         public override int Constructor
         {
@@ -24,8 +24,7 @@ namespace TgSharp.TL.Auth
         public string PhoneCodeHash { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        // manual edit: TLAbsAuthorization->TLAuthorization
-        public Auth.TLAuthorization Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -49,10 +48,9 @@ namespace TgSharp.TL.Auth
             StringUtil.Serialize(LastName, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
-            // manual edit: TLAbsAuthorization->TLAuthorization
-            Response = (Auth.TLAuthorization)ObjectUtils.DeserializeObject(br);
+            Response = (Auth.TLAbsAuthorization)ObjectUtils.DeserializeObject(br);
         }
     }
 }

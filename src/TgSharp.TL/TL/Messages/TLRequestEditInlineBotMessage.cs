@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-2091549254)]
-    public class TLRequestEditInlineBotMessage : TLMethod
+    public class TLRequestEditInlineBotMessage : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -27,7 +27,7 @@ namespace TgSharp.TL.Messages
         public TLAbsInputMedia Media { get; set; }
         public TLAbsReplyMarkup ReplyMarkup { get; set; }
         public TLVector<TLAbsMessageEntity> Entities { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -76,7 +76,7 @@ namespace TgSharp.TL.Messages
                 ObjectUtils.SerializeObject(Entities, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(1723407216)]
-    public class TLRequestEditUserInfo : TLMethod
+    public class TLRequestEditUserInfo : TLMethod<Help.TLAbsUserInfo>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Help
         public TLAbsInputUser UserId { get; set; }
         public string Message { get; set; }
         public TLVector<TLAbsMessageEntity> Entities { get; set; }
-        public Help.TLAbsUserInfo Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Help
             ObjectUtils.SerializeObject(Entities, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Help.TLAbsUserInfo)ObjectUtils.DeserializeObject(br);
         }
