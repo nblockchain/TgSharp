@@ -6,9 +6,11 @@ using TgSharp.TL;
 
 namespace TgSharp.Core.Network.Requests
 {
-    public class AckRequest : TLMethod
+    public class AckRequest : TLObject
     {
         private readonly List<ulong> msgs;
+
+        public override int Constructor => 0x62d6b459;
 
         public AckRequest(List<ulong> msgs)
         {
@@ -31,21 +33,5 @@ namespace TgSharp.Core.Network.Requests
             throw new NotImplementedException();
         }
 
-        public override void DeserializeResponse(BinaryReader stream)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool Confirmed => false;
-
-        public override bool Responded { get; }
-
-        public override int Constructor
-        {
-            get
-            {
-                return 0x62d6b459;
-            }
-        }
     }
 }

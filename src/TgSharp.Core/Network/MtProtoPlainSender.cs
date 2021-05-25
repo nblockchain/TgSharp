@@ -5,23 +5,39 @@ using System.Threading.Tasks;
 
 namespace TgSharp.Core.Network
 {
-    public class MtProtoPlainSender
+    internal class MtProtoPlainSender
     {
+        public Action<byte[]> OnResponseReceived;
+
         private int timeOffset;
         private long lastMessageId;
         private Random random;
-        private TcpTransport transport;
+        private WSTransport transport;
 
-        public MtProtoPlainSender(TcpTransport transport)
+        internal MtProtoPlainSender(WSTransport transport)
         {
             this.transport = transport;
+            transport.OnUnencryptedMessage += Transport_OnUnencryptedMessage;
             random = new Random();
         }
 
-        public async Task Send(byte[] data, CancellationToken token = default(CancellationToken))
+        private void Transport_OnUnencryptedMessage(Message message)
         {
-            token.ThrowIfCancellationRequested();
+            using (var memoryStream = new MemoryStream(message.Body))
+            using (var binaryReader = new BinaryReader(memoryStream))
+            {
+                long authKeyid = binaryReader.ReadInt64();
+                long messageId = binaryReader.ReadInt64();
+                int messageLength = binaryReader.ReadInt32();
 
+                byte[] response = binaryReader.ReadBytes(messageLength);
+
+                OnResponseReceived?.Invoke(response);
+            }
+        }
+
+        internal void Send(byte[] data)
+        {
             using (var memoryStream = new MemoryStream())
             {
                 using (var binaryWriter = new BinaryWriter(memoryStream))
@@ -33,28 +49,7 @@ namespace TgSharp.Core.Network
 
                     byte[] packet = memoryStream.ToArray();
 
-                    await transport.Send(packet, token).ConfigureAwait(false);
-                }
-            }
-        }
-
-        public async Task<byte[]> Receive(CancellationToken token = default(CancellationToken))
-        {
-            token.ThrowIfCancellationRequested();
-
-            var result = await transport.Receive(token).ConfigureAwait(false);
-
-            using (var memoryStream = new MemoryStream(result.Body))
-            {
-                using (BinaryReader binaryReader = new BinaryReader(memoryStream))
-                {
-                    long authKeyid = binaryReader.ReadInt64();
-                    long messageId = binaryReader.ReadInt64();
-                    int messageLength = binaryReader.ReadInt32();
-
-                    byte[] response = binaryReader.ReadBytes(messageLength);
-
-                    return response;
+                    transport.Send(packet);
                 }
             }
         }
