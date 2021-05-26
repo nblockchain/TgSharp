@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-400399203)]
-    public class TLRequestGetGameHighScores : TLMethod
+    public class TLRequestGetGameHighScores : TLMethod<Messages.TLHighScores>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Messages
         public TLAbsInputPeer Peer { get; set; }
         public int Id { get; set; }
         public TLAbsInputUser UserId { get; set; }
-        public Messages.TLHighScores Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Messages
             ObjectUtils.SerializeObject(UserId, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLHighScores)ObjectUtils.DeserializeObject(br);
         }

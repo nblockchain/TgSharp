@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(1364105629)]
-    public class TLRequestGetInlineBotResults : TLMethod
+    public class TLRequestGetInlineBotResults : TLMethod<Messages.TLBotResults>
     {
         public override int Constructor
         {
@@ -26,7 +26,7 @@ namespace TgSharp.TL.Messages
         public TLAbsInputGeoPoint GeoPoint { get; set; }
         public string Query { get; set; }
         public string Offset { get; set; }
-        public Messages.TLBotResults Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -59,7 +59,7 @@ namespace TgSharp.TL.Messages
             StringUtil.Serialize(Offset, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLBotResults)ObjectUtils.DeserializeObject(br);
         }

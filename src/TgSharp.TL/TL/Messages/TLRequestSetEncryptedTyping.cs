@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(2031374829)]
-    public class TLRequestSetEncryptedTyping : TLMethod
+    public class TLRequestSetEncryptedTyping : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public TLInputEncryptedChat Peer { get; set; }
         public bool Typing { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             BoolUtil.Serialize(Typing, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

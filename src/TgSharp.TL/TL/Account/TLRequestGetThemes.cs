@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(676939512)]
-    public class TLRequestGetThemes : TLMethod
+    public class TLRequestGetThemes : TLMethod<Account.TLAbsThemes>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Account
 
         public string Format { get; set; }
         public int Hash { get; set; }
-        public Account.TLAbsThemes Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Account
             bw.Write(Hash);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Account.TLAbsThemes)ObjectUtils.DeserializeObject(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-2084618926)]
-    public class TLRequestGetSavedGifs : TLMethod
+    public class TLRequestGetSavedGifs : TLMethod<Messages.TLAbsSavedGifs>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Messages
         }
 
         public int Hash { get; set; }
-        public Messages.TLAbsSavedGifs Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Messages
             bw.Write(Hash);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsSavedGifs)ObjectUtils.DeserializeObject(br);
         }

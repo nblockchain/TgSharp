@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(1436924774)]
-    public class TLRequestReceivedQueue : TLMethod
+    public class TLRequestReceivedQueue : TLMethod<TLVector<long>>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Messages
         }
 
         public int MaxQts { get; set; }
-        public TLVector<long> Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Messages
             bw.Write(MaxQts);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLVector<long>)ObjectUtils.DeserializeVector<long>(br);
         }

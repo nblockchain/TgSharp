@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL
 {
     [TLObject(-1398145746)]
-    public class TLRequestInvokeWithTakeout : TLMethod
+    public class TLRequestInvokeWithTakeout : TLMethod<TLObject>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL
 
         public long TakeoutId { get; set; }
         public TLObject Query { get; set; }
-        public TLObject Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL
             ObjectUtils.SerializeObject(Query, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLObject)ObjectUtils.DeserializeObject(br);
         }

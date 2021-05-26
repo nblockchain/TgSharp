@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Phone
 {
     [TLObject(788404002)]
-    public class TLRequestConfirmCall : TLMethod
+    public class TLRequestConfirmCall : TLMethod<Phone.TLPhoneCall>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Phone
         public byte[] GA { get; set; }
         public long KeyFingerprint { get; set; }
         public TLPhoneCallProtocol Protocol { get; set; }
-        public Phone.TLPhoneCall Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -48,7 +48,7 @@ namespace TgSharp.TL.Phone
             ObjectUtils.SerializeObject(Protocol, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Phone.TLPhoneCall)ObjectUtils.DeserializeObject(br);
         }

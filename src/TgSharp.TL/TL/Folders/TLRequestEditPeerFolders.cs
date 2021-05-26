@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Folders
 {
     [TLObject(1749536939)]
-    public class TLRequestEditPeerFolders : TLMethod
+    public class TLRequestEditPeerFolders : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Folders
         }
 
         public TLVector<TLInputFolderPeer> FolderPeers { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Folders
             ObjectUtils.SerializeObject(FolderPeers, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

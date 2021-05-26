@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(1036054804)]
-    public class TLRequestGetRecentMeUrls : TLMethod
+    public class TLRequestGetRecentMeUrls : TLMethod<Help.TLRecentMeUrls>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Help
         }
 
         public string Referer { get; set; }
-        public Help.TLRecentMeUrls Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Help
             StringUtil.Serialize(Referer, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Help.TLRecentMeUrls)ObjectUtils.DeserializeObject(br);
         }

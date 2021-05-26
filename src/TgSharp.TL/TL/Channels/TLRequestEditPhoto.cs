@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(-248621111)]
-    public class TLRequestEditPhoto : TLMethod
+    public class TLRequestEditPhoto : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Channels
 
         public TLAbsInputChannel Channel { get; set; }
         public TLAbsInputChatPhoto Photo { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Channels
             ObjectUtils.SerializeObject(Photo, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

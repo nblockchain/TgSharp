@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-462373635)]
-    public class TLRequestGetPeerDialogs : TLMethod
+    public class TLRequestGetPeerDialogs : TLMethod<Messages.TLPeerDialogs>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Messages
         }
 
         public TLVector<TLAbsInputDialogPeer> Peers { get; set; }
-        public Messages.TLPeerDialogs Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Messages
             ObjectUtils.SerializeObject(Peers, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLPeerDialogs)ObjectUtils.DeserializeObject(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(1099779595)]
-    public class TLRequestDeleteAccount : TLMethod
+    public class TLRequestDeleteAccount : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Account
         }
 
         public string Reason { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Account
             StringUtil.Serialize(Reason, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

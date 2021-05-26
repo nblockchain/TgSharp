@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(-623130288)]
-    public class TLRequestGetPrivacy : TLMethod
+    public class TLRequestGetPrivacy : TLMethod<Account.TLPrivacyRules>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Account
         }
 
         public TLAbsInputPrivacyKey Key { get; set; }
-        public Account.TLPrivacyRules Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(Key, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Account.TLPrivacyRules)ObjectUtils.DeserializeObject(br);
         }

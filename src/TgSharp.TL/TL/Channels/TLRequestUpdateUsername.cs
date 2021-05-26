@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(890549214)]
-    public class TLRequestUpdateUsername : TLMethod
+    public class TLRequestUpdateUsername : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Channels
 
         public TLAbsInputChannel Channel { get; set; }
         public string Username { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Channels
             StringUtil.Serialize(Username, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(71126828)]
-    public class TLRequestGetStickers : TLMethod
+    public class TLRequestGetStickers : TLMethod<Messages.TLAbsStickers>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public string Emoticon { get; set; }
         public int Hash { get; set; }
-        public Messages.TLAbsStickers Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             bw.Write(Hash);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsStickers)ObjectUtils.DeserializeObject(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(-262453244)]
-    public class TLRequestInitTakeoutSession : TLMethod
+    public class TLRequestInitTakeoutSession : TLMethod<Account.TLTakeout>
     {
         public override int Constructor
         {
@@ -28,7 +28,7 @@ namespace TgSharp.TL.Account
         public bool MessageChannels { get; set; }
         public bool Files { get; set; }
         public int? FileMaxSize { get; set; }
-        public Account.TLTakeout Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -59,7 +59,7 @@ namespace TgSharp.TL.Account
                 bw.Write(FileMaxSize.Value);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Account.TLTakeout)ObjectUtils.DeserializeObject(br);
         }

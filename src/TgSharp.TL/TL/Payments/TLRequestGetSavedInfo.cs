@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Payments
 {
     [TLObject(578650699)]
-    public class TLRequestGetSavedInfo : TLMethod
+    public class TLRequestGetSavedInfo : TLMethod<Payments.TLSavedInfo>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Payments
             }
         }
 
-        public Payments.TLSavedInfo Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Payments
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Payments.TLSavedInfo)ObjectUtils.DeserializeObject(br);
         }

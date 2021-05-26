@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Photos
 {
     [TLObject(-1848823128)]
-    public class TLRequestGetUserPhotos : TLMethod
+    public class TLRequestGetUserPhotos : TLMethod<Photos.TLAbsPhotos>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Photos
         public int Offset { get; set; }
         public long MaxId { get; set; }
         public int Limit { get; set; }
-        public Photos.TLAbsPhotos Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -48,7 +48,7 @@ namespace TgSharp.TL.Photos
             bw.Write(Limit);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Photos.TLAbsPhotos)ObjectUtils.DeserializeObject(br);
         }

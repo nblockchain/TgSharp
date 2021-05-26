@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-346119674)]
-    public class TLRequestSetInlineBotResults : TLMethod
+    public class TLRequestSetInlineBotResults : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -28,7 +28,7 @@ namespace TgSharp.TL.Messages
         public int CacheTime { get; set; }
         public string NextOffset { get; set; }
         public TLInlineBotSwitchPM SwitchPm { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -68,7 +68,7 @@ namespace TgSharp.TL.Messages
                 ObjectUtils.SerializeObject(SwitchPm, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

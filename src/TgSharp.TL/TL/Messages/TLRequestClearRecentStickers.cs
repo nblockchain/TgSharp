@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-1986437075)]
-    public class TLRequestClearRecentStickers : TLMethod
+    public class TLRequestClearRecentStickers : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public int Flags { get; set; }
         public bool Attached { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -41,7 +41,7 @@ namespace TgSharp.TL.Messages
             bw.Write(Flags);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(-578472351)]
-    public class TLRequestUploadWallPaper : TLMethod
+    public class TLRequestUploadWallPaper : TLMethod<TLAbsWallPaper>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Account
         public TLAbsInputFile File { get; set; }
         public string MimeType { get; set; }
         public TLWallPaperSettings Settings { get; set; }
-        public TLAbsWallPaper Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(Settings, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsWallPaper)ObjectUtils.DeserializeObject(br);
         }

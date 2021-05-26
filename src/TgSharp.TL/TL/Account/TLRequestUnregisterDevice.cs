@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(813089983)]
-    public class TLRequestUnregisterDevice : TLMethod
+    public class TLRequestUnregisterDevice : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Account
         public int TokenType { get; set; }
         public string Token { get; set; }
         public TLVector<int> OtherUids { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(OtherUids, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

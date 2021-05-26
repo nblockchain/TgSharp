@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(-1516564433)]
-    public class TLRequestUpdatePasswordSettings : TLMethod
+    public class TLRequestUpdatePasswordSettings : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Account
 
         public TLAbsInputCheckPasswordSRP Password { get; set; }
         public Account.TLPasswordInputSettings NewSettings { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Account
             ObjectUtils.SerializeObject(NewSettings, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

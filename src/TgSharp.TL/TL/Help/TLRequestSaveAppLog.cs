@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(1862465352)]
-    public class TLRequestSaveAppLog : TLMethod
+    public class TLRequestSaveAppLog : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Help
         }
 
         public TLVector<TLInputAppEvent> Events { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Help
             ObjectUtils.SerializeObject(Events, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

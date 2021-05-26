@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(1398240377)]
-    public class TLRequestGetNotifyExceptions : TLMethod
+    public class TLRequestGetNotifyExceptions : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Account
         public int Flags { get; set; }
         public bool CompareSound { get; set; }
         public TLAbsInputNotifyPeer Peer { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -49,7 +49,7 @@ namespace TgSharp.TL.Account
                 ObjectUtils.SerializeObject(Peer, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

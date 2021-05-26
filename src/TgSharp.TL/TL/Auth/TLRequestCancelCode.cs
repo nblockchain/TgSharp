@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Auth
 {
     [TLObject(520357240)]
-    public class TLRequestCancelCode : TLMethod
+    public class TLRequestCancelCode : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Auth
 
         public string PhoneNumber { get; set; }
         public string PhoneCodeHash { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Auth
             StringUtil.Serialize(PhoneCodeHash, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Phone
 {
     [TLObject(1430593449)]
-    public class TLRequestGetCallConfig : TLMethod
+    public class TLRequestGetCallConfig : TLMethod<TLDataJSON>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Phone
             }
         }
 
-        public TLDataJSON Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Phone
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLDataJSON)ObjectUtils.DeserializeObject(br);
         }

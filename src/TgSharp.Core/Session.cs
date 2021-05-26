@@ -54,23 +54,12 @@ namespace TgSharp.Core
     {
         internal object Lock = new object ();
 
-        public int Sequence { get; set; }
-#if CI
-            // see the same CI-wrapped assignment in .FromBytes(), but this one will become useful
-            // when we generate a new session.dat for CI again
-            = CurrentTime ();
-
-        // this is similar to the unixTime but rooted on the worst year of humanity instead of 1970
-        internal static int CurrentTime ()
-        {
-            return (int)DateTime.UtcNow.Subtract (new DateTime (2020, 1, 1)).TotalSeconds;
-        }
-#endif
+        public int Sequence { get; set; } = 0;
 
         public string SessionUserId { get; set; }
         internal DataCenter DataCenter { get; set; }
         public AuthKey AuthKey { get; set; }
-        public ulong Id { get; set; }
+        public ulong Id { get; set; } = Utils.Helpers.GenerateRandomUlong();
         public ulong Salt { get; set; }
         public int TimeOffset { get; set; }
         public long LastMessageId { get; set; }

@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(1369162417)]
-    public class TLRequestUploadMedia : TLMethod
+    public class TLRequestUploadMedia : TLMethod<TLAbsMessageMedia>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public TLAbsInputPeer Peer { get; set; }
         public TLAbsInputMedia Media { get; set; }
-        public TLAbsMessageMedia Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             ObjectUtils.SerializeObject(Media, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsMessageMedia)ObjectUtils.DeserializeObject(br);
         }

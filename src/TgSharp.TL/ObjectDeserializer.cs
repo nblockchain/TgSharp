@@ -21,12 +21,7 @@ namespace TgSharp.TL
                 throw new InvalidDataException("Invalid constructor, or invalid TLContext static initialization", ex);
             }
 
-            if (t.IsSubclassOf(typeof(TLMethod)))
-            {
-                ((TLMethod)obj).DeserializeResponse(reader);
-                return obj;
-            }
-            else if (t.IsSubclassOf(typeof(TLObject)))
+            if (t.IsSubclassOf(typeof(TLObject)))
             {
                 ((TLObject)obj).DeserializeBody(reader);
                 return obj;

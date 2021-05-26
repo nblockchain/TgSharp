@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Account
 {
     [TLObject(1880182943)]
-    public class TLRequestSendVerifyEmailCode : TLMethod
+    public class TLRequestSendVerifyEmailCode : TLMethod<Account.TLSentEmailCode>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Account
         }
 
         public string Email { get; set; }
-        public Account.TLSentEmailCode Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Account
             StringUtil.Serialize(Email, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Account.TLSentEmailCode)ObjectUtils.DeserializeObject(br);
         }

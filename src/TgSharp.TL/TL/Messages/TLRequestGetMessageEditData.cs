@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-39416522)]
-    public class TLRequestGetMessageEditData : TLMethod
+    public class TLRequestGetMessageEditData : TLMethod<Messages.TLMessageEditData>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public TLAbsInputPeer Peer { get; set; }
         public int Id { get; set; }
-        public Messages.TLMessageEditData Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             bw.Write(Id);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLMessageEditData)ObjectUtils.DeserializeObject(br);
         }

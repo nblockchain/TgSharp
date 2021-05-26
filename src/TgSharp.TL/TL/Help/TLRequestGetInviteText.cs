@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(1295590211)]
-    public class TLRequestGetInviteText : TLMethod
+    public class TLRequestGetInviteText : TLMethod<Help.TLInviteText>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Help
             }
         }
 
-        public Help.TLInviteText Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Help
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Help.TLInviteText)ObjectUtils.DeserializeObject(br);
         }

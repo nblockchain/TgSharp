@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(486505992)]
-    public class TLRequestGetSplitRanges : TLMethod
+    public class TLRequestGetSplitRanges : TLMethod<TLVector<TLMessageRange>>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Messages
             }
         }
 
-        public TLVector<TLMessageRange> Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Messages
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLVector<TLMessageRange>)ObjectUtils.DeserializeVector<TLMessageRange>(br);
         }

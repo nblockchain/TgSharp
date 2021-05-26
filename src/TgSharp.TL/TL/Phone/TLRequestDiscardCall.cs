@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Phone
 {
     [TLObject(-1295269440)]
-    public class TLRequestDiscardCall : TLMethod
+    public class TLRequestDiscardCall : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -26,7 +26,7 @@ namespace TgSharp.TL.Phone
         public int Duration { get; set; }
         public TLAbsPhoneCallDiscardReason Reason { get; set; }
         public long ConnectionId { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -53,7 +53,7 @@ namespace TgSharp.TL.Phone
             bw.Write(ConnectionId);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

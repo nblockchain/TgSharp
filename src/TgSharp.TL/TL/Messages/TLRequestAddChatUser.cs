@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-106911223)]
-    public class TLRequestAddChatUser : TLMethod
+    public class TLRequestAddChatUser : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Messages
         public int ChatId { get; set; }
         public TLAbsInputUser UserId { get; set; }
         public int FwdLimit { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Messages
             bw.Write(FwdLimit);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

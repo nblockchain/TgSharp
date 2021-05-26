@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Auth
 {
     [TLObject(-1313598185)]
-    public class TLRequestExportLoginToken : TLMethod
+    public class TLRequestExportLoginToken : TLMethod<Auth.TLAbsLoginToken>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Auth
         public int ApiId { get; set; }
         public string ApiHash { get; set; }
         public TLVector<int> ExceptIds { get; set; }
-        public Auth.TLAbsLoginToken Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Auth
             ObjectUtils.SerializeObject(ExceptIds, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Auth.TLAbsLoginToken)ObjectUtils.DeserializeObject(br);
         }

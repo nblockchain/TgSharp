@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Photos
 {
     [TLObject(-256159406)]
-    public class TLRequestUpdateProfilePhoto : TLMethod
+    public class TLRequestUpdateProfilePhoto : TLMethod<TLAbsUserProfilePhoto>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Photos
         }
 
         public TLAbsInputPhoto Id { get; set; }
-        public TLAbsUserProfilePhoto Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Photos
             ObjectUtils.SerializeObject(Id, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUserProfilePhoto)ObjectUtils.DeserializeObject(br);
         }

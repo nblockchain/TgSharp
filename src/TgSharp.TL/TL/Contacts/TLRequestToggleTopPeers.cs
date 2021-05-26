@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Contacts
 {
     [TLObject(-2062238246)]
-    public class TLRequestToggleTopPeers : TLMethod
+    public class TLRequestToggleTopPeers : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Contacts
         }
 
         public bool Enabled { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Contacts
             BoolUtil.Serialize(Enabled, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

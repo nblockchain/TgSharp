@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(1072547679)]
-    public class TLRequestGetDeepLinkInfo : TLMethod
+    public class TLRequestGetDeepLinkInfo : TLMethod<Help.TLAbsDeepLinkInfo>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Help
         }
 
         public string Path { get; set; }
-        public Help.TLAbsDeepLinkInfo Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Help
             StringUtil.Serialize(Path, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Help.TLAbsDeepLinkInfo)ObjectUtils.DeserializeObject(br);
         }

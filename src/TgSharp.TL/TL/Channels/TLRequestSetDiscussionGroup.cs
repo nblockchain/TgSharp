@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(1079520178)]
-    public class TLRequestSetDiscussionGroup : TLMethod
+    public class TLRequestSetDiscussionGroup : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Channels
 
         public TLAbsInputChannel Broadcast { get; set; }
         public TLAbsInputChannel Group { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Channels
             ObjectUtils.SerializeObject(Group, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

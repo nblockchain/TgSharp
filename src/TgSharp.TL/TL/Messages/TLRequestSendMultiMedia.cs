@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-872345397)]
-    public class TLRequestSendMultiMedia : TLMethod
+    public class TLRequestSendMultiMedia : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -28,7 +28,7 @@ namespace TgSharp.TL.Messages
         public int? ReplyToMsgId { get; set; }
         public TLVector<TLInputSingleMedia> MultiMedia { get; set; }
         public int? ScheduleDate { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -67,7 +67,7 @@ namespace TgSharp.TL.Messages
                 bw.Write(ScheduleDate.Value);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

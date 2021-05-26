@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-946871200)]
-    public class TLRequestInstallStickerSet : TLMethod
+    public class TLRequestInstallStickerSet : TLMethod<Messages.TLAbsStickerSetInstallResult>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public TLAbsInputStickerSet Stickerset { get; set; }
         public bool Archived { get; set; }
-        public Messages.TLAbsStickerSetInstallResult Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             BoolUtil.Serialize(Archived, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsStickerSetInstallResult)ObjectUtils.DeserializeObject(br);
         }

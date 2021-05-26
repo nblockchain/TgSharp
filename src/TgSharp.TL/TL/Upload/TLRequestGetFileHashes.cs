@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Upload
 {
     [TLObject(-956147407)]
-    public class TLRequestGetFileHashes : TLMethod
+    public class TLRequestGetFileHashes : TLMethod<TLVector<TLFileHash>>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Upload
 
         public TLAbsInputFileLocation Location { get; set; }
         public int Offset { get; set; }
-        public TLVector<TLFileHash> Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Upload
             bw.Write(Offset);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLVector<TLFileHash>)ObjectUtils.DeserializeVector<TLFileHash>(br);
         }

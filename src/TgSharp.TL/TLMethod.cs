@@ -7,39 +7,29 @@ using System.Threading.Tasks;
 
 namespace TgSharp.TL
 {
-    public abstract class TLMethod : TLObject
+    public abstract class TLMethod : TLObject {
+        /*
+         * Content-related Message
+         *    A message requiring an explicit acknowledgment. These include all the user and many service messages, virtually all with the exception of containers and acknowledgments. 
+         */
+        public virtual bool ContentRelated { get; } = true;
+        public abstract void ReadResponse(BinaryReader reader);
+        public abstract void SetException(Exception ex);
+    }
+
+    public abstract class TLMethod<T> : TLMethod
     {
+        protected T Response { get; set; }
+        public TaskCompletionSource<T> CompletionSource { get; set; }
 
-        public abstract void DeserializeResponse(BinaryReader stream);
-        #region MTPROTO
-        public long MessageId { get; set; }
-        public int Sequence { get; set; }
-        public bool Dirty { get; set; }
-        public bool Sended { get; private set; }
-        public DateTime SendTime { get; private set; }
-        public bool ConfirmReceived { get; set; }
-        public virtual bool Confirmed { get; } = true;
-        public virtual bool Responded { get; } = false;
+        protected abstract void DeserializeResponse(BinaryReader stream);
 
-        public virtual void OnSendSuccess()
+        public override void ReadResponse(BinaryReader reader)
         {
-            SendTime = DateTime.Now;
-            Sended = true;
+            DeserializeResponse(reader);
+            CompletionSource.SetResult(Response);
         }
 
-        public virtual void OnConfirm()
-        {
-            ConfirmReceived = true;
-        }
-
-        public bool NeedResend
-        {
-            get
-            {
-                return Dirty || (Confirmed && !ConfirmReceived && DateTime.Now - SendTime > TimeSpan.FromSeconds(3));
-            }
-        }
-        #endregion
-
+        public override void SetException(Exception ex) => CompletionSource.SetException(ex);
     }
 }

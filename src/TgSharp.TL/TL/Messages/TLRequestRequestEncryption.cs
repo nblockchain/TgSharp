@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-162681021)]
-    public class TLRequestRequestEncryption : TLMethod
+    public class TLRequestRequestEncryption : TLMethod<TLAbsEncryptedChat>
     {
         public override int Constructor
         {
@@ -23,7 +23,7 @@ namespace TgSharp.TL.Messages
         public TLAbsInputUser UserId { get; set; }
         public int RandomId { get; set; }
         public byte[] GA { get; set; }
-        public TLAbsEncryptedChat Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -45,7 +45,7 @@ namespace TgSharp.TL.Messages
             BytesUtil.Serialize(GA, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsEncryptedChat)ObjectUtils.DeserializeObject(br);
         }

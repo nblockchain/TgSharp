@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(1932455680)]
-    public class TLRequestGetSearchCounters : TLMethod
+    public class TLRequestGetSearchCounters : TLMethod<TLVector<Messages.TLSearchCounter>>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Messages
 
         public TLAbsInputPeer Peer { get; set; }
         public TLVector<TLAbsMessagesFilter> Filters { get; set; }
-        public TLVector<Messages.TLSearchCounter> Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Messages
             ObjectUtils.SerializeObject(Filters, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLVector<Messages.TLSearchCounter>)ObjectUtils.DeserializeVector<Messages.TLSearchCounter>(br);
         }

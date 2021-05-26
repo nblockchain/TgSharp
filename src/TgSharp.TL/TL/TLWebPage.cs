@@ -38,7 +38,6 @@ namespace TgSharp.TL
         public string Author { get; set; }
         public TLAbsDocument Document { get; set; }
         public TLPage CachedPage { get; set; }
-        // manual edit: WebPageAttribute->TLWebPageAttributeTheme
         public TLVector<TLWebPageAttributeTheme> Attributes { get; set; }
 
         public void ComputeFlags()
@@ -119,8 +118,7 @@ namespace TgSharp.TL
                 CachedPage = null;
 
             if ((Flags & 4096) != 0)
-                // manual edit: WebPageAttribute->TLWebPageAttributeTheme
-                Attributes = (TLVector<TLWebPageAttributeTheme>)ObjectUtils.DeserializeVector<TLWebPageAttributeTheme> (br);
+                Attributes = (TLVector<TLWebPageAttributeTheme>)ObjectUtils.DeserializeVector<TLWebPageAttributeTheme>(br);
             else
                 Attributes = null;
 

@@ -39,6 +39,7 @@ namespace TgSharp.Tests
 
         private int ApiId { get; set; }
 
+        private const int DEFAULT_CONNECTION_RETRY_COUNT = 2;
         class Assert
         {
             static internal void IsNotNull(object obj)
@@ -118,13 +119,23 @@ namespace TgSharp.Tests
             NumberToAddToChat = ConfigurationManager.AppSettings[nameof(NumberToAddToChat)];
             if (string.IsNullOrEmpty(NumberToAddToChat))
                 Debug.WriteLine(appConfigMsgWarning, nameof(NumberToAddToChat));
+
+            NumberToSendMessage = ConfigurationManager.AppSettings[nameof(NumberToSendMessage)];
+            if (string.IsNullOrWhiteSpace(NumberToSendMessage))
+                Debug.WriteLine(appConfigMsgWarning, nameof(NumberToSendMessage));
+            else
+                NumberToSendMessage =
+                    NumberToSendMessage.StartsWith("+") ?
+                    NumberToSendMessage.Substring(1, NumberToSendMessage.Length - 1) :
+                    NumberToSendMessage;
+
         }
 
         public virtual async Task AuthUser()
         {
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var hash = await client.SendCodeRequestAsync(NumberToAuthenticate);
             var code = CodeToAuthenticate; // you can change code in debugger too
@@ -150,24 +161,15 @@ namespace TgSharp.Tests
 
         public virtual async Task SendMessageTest()
         {
-            NumberToSendMessage = ConfigurationManager.AppSettings[nameof(NumberToSendMessage)];
-            if (string.IsNullOrWhiteSpace(NumberToSendMessage))
-                throw new Exception($"Please fill the '{nameof(NumberToSendMessage)}' setting in app.config file first");
-
-            // this is because the contacts in the address come without the "+" prefix
-            var normalizedNumber = NumberToSendMessage.StartsWith("+") ?
-                NumberToSendMessage.Substring(1, NumberToSendMessage.Length - 1) :
-                NumberToSendMessage;
-
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var result = await client.GetContactsAsync();
 
             var user = result.Users
                 .OfType<TLUser>()
-                .FirstOrDefault(x => x.Phone == normalizedNumber);
+                .FirstOrDefault(x => x.Phone == NumberToSendMessage);
 
             if (user == null)
             {
@@ -183,7 +185,7 @@ namespace TgSharp.Tests
         {
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var dialogs = (TLDialogs)await client.GetUserDialogsAsync();
             var chat = dialogs.Chats
@@ -197,7 +199,7 @@ namespace TgSharp.Tests
         {
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var result = await client.GetContactsAsync();
 
@@ -213,7 +215,7 @@ namespace TgSharp.Tests
         {
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var result = await client.GetContactsAsync();
 
@@ -234,7 +236,7 @@ namespace TgSharp.Tests
         {
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var result = await client.GetContactsAsync();
 
@@ -243,7 +245,7 @@ namespace TgSharp.Tests
                 .FirstOrDefault(x => x.Phone == NumberToSendMessage);
 
             var inputPeer = new TLInputPeerUser() { UserId = user.Id };
-            var res = await client.SendRequestAsync<TLMessagesSlice>(new TLRequestGetHistory() { Peer = inputPeer });
+            var res = (TLMessagesSlice)await client.SendRequestAsync(new TLRequestGetHistory() { Peer = inputPeer });
             var document = res.Messages
                 .OfType<TLMessage>()
                 .Where(m => m.Media != null)
@@ -270,7 +272,7 @@ namespace TgSharp.Tests
         {
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var result = await client.GetContactsAsync();
 
@@ -297,7 +299,7 @@ namespace TgSharp.Tests
         public virtual async Task SignUpNewUser()
         {
             var client = NewClient();
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var hash = await client.SendCodeRequestAsync(NotRegisteredNumberToSignUp);
             var code = "";
@@ -315,7 +317,7 @@ namespace TgSharp.Tests
 
             var client = NewClient();
 
-            await client.ConnectAsync();
+            await client.ConnectAsync(DEFAULT_CONNECTION_RETRY_COUNT);
 
             var result = await client.SearchUserAsync(UserNameToSendMessage);
 

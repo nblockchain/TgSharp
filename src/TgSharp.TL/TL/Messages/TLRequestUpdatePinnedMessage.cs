@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-760547348)]
-    public class TLRequestUpdatePinnedMessage : TLMethod
+    public class TLRequestUpdatePinnedMessage : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Messages
         public bool Silent { get; set; }
         public TLAbsInputPeer Peer { get; set; }
         public int Id { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -47,7 +47,7 @@ namespace TgSharp.TL.Messages
             bw.Write(Id);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }

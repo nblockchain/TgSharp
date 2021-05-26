@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(1375900482)]
-    public class TLRequestGetCdnConfig : TLMethod
+    public class TLRequestGetCdnConfig : TLMethod<TLCdnConfig>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Help
             }
         }
 
-        public TLCdnConfig Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Help
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLCdnConfig)ObjectUtils.DeserializeObject(br);
         }

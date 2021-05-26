@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Phone
 {
     [TLObject(662363518)]
-    public class TLRequestSaveCallDebug : TLMethod
+    public class TLRequestSaveCallDebug : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Phone
 
         public TLInputPhoneCall Peer { get; set; }
         public TLDataJSON Debug { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Phone
             ObjectUtils.SerializeObject(Debug, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

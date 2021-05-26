@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Messages
 {
     [TLObject(-1701831834)]
-    public class TLRequestSendEncryptedFile : TLMethod
+    public class TLRequestSendEncryptedFile : TLMethod<Messages.TLAbsSentEncryptedMessage>
     {
         public override int Constructor
         {
@@ -24,7 +24,7 @@ namespace TgSharp.TL.Messages
         public long RandomId { get; set; }
         public byte[] Data { get; set; }
         public TLAbsInputEncryptedFile File { get; set; }
-        public Messages.TLAbsSentEncryptedMessage Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -48,7 +48,7 @@ namespace TgSharp.TL.Messages
             ObjectUtils.SerializeObject(File, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (Messages.TLAbsSentEncryptedMessage)ObjectUtils.DeserializeObject(br);
         }

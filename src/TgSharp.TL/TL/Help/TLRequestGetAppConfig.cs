@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Help
 {
     [TLObject(-1735311088)]
-    public class TLRequestGetAppConfig : TLMethod
+    public class TLRequestGetAppConfig : TLMethod<TLAbsJSONValue>
     {
         public override int Constructor
         {
@@ -20,7 +20,7 @@ namespace TgSharp.TL.Help
             }
         }
 
-        public TLAbsJSONValue Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -38,7 +38,7 @@ namespace TgSharp.TL.Help
             // do nothing else
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsJSONValue)ObjectUtils.DeserializeObject(br);
         }

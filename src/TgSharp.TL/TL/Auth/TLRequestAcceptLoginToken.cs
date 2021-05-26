@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Auth
 {
     [TLObject(-392909491)]
-    public class TLRequestAcceptLoginToken : TLMethod
+    public class TLRequestAcceptLoginToken : TLMethod<TLAuthorization>
     {
         public override int Constructor
         {
@@ -21,7 +21,7 @@ namespace TgSharp.TL.Auth
         }
 
         public byte[] Token { get; set; }
-        public TLAuthorization Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -39,7 +39,7 @@ namespace TgSharp.TL.Auth
             BytesUtil.Serialize(Token, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAuthorization)ObjectUtils.DeserializeObject(br);
         }

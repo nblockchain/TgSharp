@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Bots
 {
     [TLObject(-434028723)]
-    public class TLRequestAnswerWebhookJSONQuery : TLMethod
+    public class TLRequestAnswerWebhookJSONQuery : TLMethod<bool>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Bots
 
         public long QueryId { get; set; }
         public TLDataJSON Data { get; set; }
-        public bool Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Bots
             ObjectUtils.SerializeObject(Data, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = BoolUtil.Deserialize(br);
         }

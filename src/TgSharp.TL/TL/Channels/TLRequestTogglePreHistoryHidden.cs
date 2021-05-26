@@ -10,7 +10,7 @@ using TgSharp.TL;
 namespace TgSharp.TL.Channels
 {
     [TLObject(-356796084)]
-    public class TLRequestTogglePreHistoryHidden : TLMethod
+    public class TLRequestTogglePreHistoryHidden : TLMethod<TLAbsUpdates>
     {
         public override int Constructor
         {
@@ -22,7 +22,7 @@ namespace TgSharp.TL.Channels
 
         public TLAbsInputChannel Channel { get; set; }
         public bool Enabled { get; set; }
-        public TLAbsUpdates Response { get; set; }
+
 
         public void ComputeFlags()
         {
@@ -42,7 +42,7 @@ namespace TgSharp.TL.Channels
             BoolUtil.Serialize(Enabled, bw);
         }
 
-        public override void DeserializeResponse(BinaryReader br)
+        protected override void DeserializeResponse(BinaryReader br)
         {
             Response = (TLAbsUpdates)ObjectUtils.DeserializeObject(br);
         }
